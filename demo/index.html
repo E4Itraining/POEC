@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LMS Platform - Interface Apprenant Demo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background: 0 0% 100%;
+            --foreground: 222.2 84% 4.9%;
+            --card: 0 0% 100%;
+            --card-foreground: 222.2 84% 4.9%;
+            --primary: 221.2 83.2% 53.3%;
+            --primary-foreground: 210 40% 98%;
+            --secondary: 210 40% 96.1%;
+            --secondary-foreground: 222.2 47.4% 11.2%;
+            --muted: 210 40% 96.1%;
+            --muted-foreground: 215.4 16.3% 46.9%;
+            --accent: 210 40% 96.1%;
+            --accent-foreground: 222.2 47.4% 11.2%;
+            --destructive: 0 84.2% 60.2%;
+            --success: 142.1 76.2% 36.3%;
+            --warning: 45.4 93.4% 47.5%;
+            --border: 214.3 31.8% 91.4%;
+            --ring: 221.2 83.2% 53.3%;
+            --radius: 0.5rem;
+            --sidebar-width: 280px;
+            --sidebar-collapsed: 80px;
+            --header-height: 64px;
+        }
+
+        [data-theme="dark"] {
+            --background: 222.2 84% 4.9%;
+            --foreground: 210 40% 98%;
+            --card: 222.2 84% 4.9%;
+            --card-foreground: 210 40% 98%;
+            --primary: 217.2 91.2% 59.8%;
+            --primary-foreground: 222.2 47.4% 11.2%;
+            --secondary: 217.2 32.6% 17.5%;
+            --secondary-foreground: 210 40% 98%;
+            --muted: 217.2 32.6% 17.5%;
+            --muted-foreground: 215 20.2% 65.1%;
+            --accent: 217.2 32.6% 17.5%;
+            --accent-foreground: 210 40% 98%;
+            --border: 217.2 32.6% 17.5%;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Layout */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: hsl(var(--card));
+            border-right: 1px solid hsl(var(--border));
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            z-index: 50;
+            transition: transform 0.3s ease, width 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid hsl(var(--border));
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: hsl(var(--primary));
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, hsl(var(--primary)), hsl(221 83% 63%));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+        }
+
+        .user-profile {
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 1px solid hsl(var(--border));
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, hsl(var(--primary)), hsl(280 80% 60%));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .user-info h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: hsl(var(--foreground));
+        }
+
+        .user-info p {
+            font-size: 0.8rem;
+            color: hsl(var(--muted-foreground));
+        }
+
+        .nav-menu {
+            flex: 1;
+            padding: 1rem 0;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1.5rem;
+            color: hsl(var(--muted-foreground));
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: hsl(var(--accent));
+            color: hsl(var(--foreground));
+        }
+
+        .nav-item.active {
+            background: hsl(var(--primary) / 0.1);
+            color: hsl(var(--primary));
+            border-left-color: hsl(var(--primary));
+            font-weight: 500;
+        }
+
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .nav-badge {
+            margin-left: auto;
+            background: hsl(var(--primary));
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 9999px;
+            font-weight: 600;
+        }
+
+        .sidebar-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid hsl(var(--border));
+        }
+
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: hsl(var(--destructive) / 0.1);
+            color: hsl(var(--destructive));
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .logout-btn:hover {
+            background: hsl(var(--destructive) / 0.2);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+        }
+
+        /* Header */
+        .header {
+            height: var(--header-height);
+            background: hsl(var(--card) / 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid hsl(var(--border));
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.5rem;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: hsl(var(--secondary));
+            border-radius: var(--radius);
+            padding: 0.5rem 1rem;
+            min-width: 300px;
+        }
+
+        .search-bar input {
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 0.9rem;
+            color: hsl(var(--foreground));
+            width: 100%;
+        }
+
+        .search-bar input::placeholder {
+            color: hsl(var(--muted-foreground));
+        }
+
+        .search-bar svg {
+            color: hsl(var(--muted-foreground));
+            width: 18px;
+            height: 18px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius);
+            border: none;
+            background: transparent;
+            color: hsl(var(--muted-foreground));
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .icon-btn:hover {
+            background: hsl(var(--accent));
+            color: hsl(var(--foreground));
+        }
+
+        .icon-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 8px;
+            height: 8px;
+            background: hsl(var(--destructive));
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .lang-switcher {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            background: hsl(var(--secondary));
+            border-radius: var(--radius);
+            padding: 0.25rem;
+        }
+
+        .lang-btn {
+            padding: 0.5rem 0.75rem;
+            border: none;
+            background: transparent;
+            border-radius: calc(var(--radius) - 2px);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: hsl(var(--muted-foreground));
+            transition: all 0.2s ease;
+        }
+
+        .lang-btn.active {
+            background: hsl(var(--card));
+            color: hsl(var(--foreground));
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* Page Content */
+        .page-content {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1400px;
+        }
+
+        .welcome-section {
+            margin-bottom: 2rem;
+        }
+
+        .welcome-section h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-section p {
+            color: hsl(var(--muted-foreground));
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: calc(var(--radius) * 2);
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.15);
+        }
+
+        .stat-card.primary {
+            background: linear-gradient(135deg, hsl(var(--primary)), hsl(221 83% 63%));
+            border: none;
+            color: white;
+        }
+
+        .stat-card.primary .stat-label,
+        .stat-card.primary .stat-trend {
+            color: rgba(255,255,255,0.8);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .stat-card:not(.primary) .stat-icon {
+            background: hsl(var(--primary) / 0.1);
+            color: hsl(var(--primary));
+        }
+
+        .stat-card.primary .stat-icon {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: hsl(var(--muted-foreground));
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-trend {
+            font-size: 0.8rem;
+            color: hsl(var(--success));
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .stat-trend.up { color: hsl(var(--success)); }
+        .stat-trend.down { color: hsl(var(--destructive)); }
+
+        /* Section Headers */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .view-all-btn {
+            color: hsl(var(--primary));
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            transition: gap 0.2s ease;
+        }
+
+        .view-all-btn:hover {
+            gap: 0.5rem;
+        }
+
+        /* Course Cards */
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .course-card {
+            background: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: calc(var(--radius) * 2);
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .course-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -15px rgba(0,0,0,0.15);
+        }
+
+        .course-thumbnail {
+            position: relative;
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg, hsl(var(--primary)), hsl(280 80% 60%));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            overflow: hidden;
+        }
+
+        .course-thumbnail::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
+        }
+
+        .course-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .play-overlay {
+            position: absolute;
+            width: 56px;
+            height: 56px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+
+        .course-card:hover .play-overlay {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .play-overlay svg {
+            width: 24px;
+            height: 24px;
+            color: hsl(var(--primary));
+            margin-left: 3px;
+        }
+
+        .level-badge {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            z-index: 1;
+        }
+
+        .level-badge.beginner {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+        }
+
+        .level-badge.intermediate {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+        }
+
+        .level-badge.advanced {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+
+        .course-content {
+            padding: 1.25rem;
+        }
+
+        .course-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .course-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.8rem;
+            color: hsl(var(--muted-foreground));
+            margin-bottom: 1rem;
+        }
+
+        .course-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .progress-container {
+            margin-bottom: 1rem;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-label {
+            color: hsl(var(--muted-foreground));
+        }
+
+        .progress-value {
+            font-weight: 600;
+            color: hsl(var(--primary));
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: hsl(var(--secondary));
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, hsl(var(--primary)), hsl(280 80% 60%));
+            border-radius: 9999px;
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .continue-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: hsl(var(--primary));
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .continue-btn:hover {
+            background: hsl(221 83% 48%);
+            transform: translateY(-1px);
+        }
+
+        /* Badges Section */
+        .badges-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .badge-card {
+            background: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: calc(var(--radius) * 2);
+            padding: 1.25rem;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .badge-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
+        }
+
+        .badge-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 1rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .badge-icon.achievement {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+        }
+
+        .badge-icon.milestone {
+            background: linear-gradient(135deg, #3b82f6, #6366f1);
+        }
+
+        .badge-icon.skill {
+            background: linear-gradient(135deg, #22c55e, #10b981);
+        }
+
+        .badge-icon.special {
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+        }
+
+        .badge-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .badge-points {
+            font-size: 0.8rem;
+            color: hsl(var(--primary));
+            font-weight: 500;
+        }
+
+        .badge-date {
+            font-size: 0.75rem;
+            color: hsl(var(--muted-foreground));
+            margin-top: 0.5rem;
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: hsl(var(--foreground));
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .courses-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .badges-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .mobile-menu-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .search-bar {
+                display: none;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .badges-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .page-content {
+                padding: 1rem;
+            }
+        }
+
+        /* Overlay */
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 45;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-in {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        .stat-card { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.15s; }
+        .stat-card:nth-child(3) { animation-delay: 0.2s; }
+        .stat-card:nth-child(4) { animation-delay: 0.25s; }
+
+        .course-card { animation-delay: 0.2s; }
+        .course-card:nth-child(2) { animation-delay: 0.25s; }
+        .course-card:nth-child(3) { animation-delay: 0.3s; }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: var(--radius);
+            padding: 1rem 1.5rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast-icon {
+            width: 24px;
+            height: 24px;
+            color: hsl(var(--success));
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Overlay (mobile) -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">📚</div>
+                    <span>LMS Platform</span>
+                </div>
+            </div>
+
+            <div class="user-profile">
+                <div class="avatar">JD</div>
+                <div class="user-info">
+                    <h3>Jean Dupont</h3>
+                    <p data-i18n="learner">Apprenant</p>
+                </div>
+            </div>
+
+            <nav class="nav-menu">
+                <a class="nav-item active" href="#" data-page="dashboard">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+                    <span data-i18n="dashboard">Tableau de bord</span>
+                </a>
+                <a class="nav-item" href="#" data-page="my-courses">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                    <span data-i18n="myCourses">Mes cours</span>
+                    <span class="nav-badge">3</span>
+                </a>
+                <a class="nav-item" href="#" data-page="catalog">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                    <span data-i18n="exploreCourses">Explorer les cours</span>
+                </a>
+                <a class="nav-item" href="#" data-page="achievements">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+                    <span data-i18n="achievements">Réalisations</span>
+                </a>
+                <a class="nav-item" href="#" data-page="settings">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"/></svg>
+                    <span data-i18n="settings">Paramètres</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="logout-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    <span data-i18n="logout">Déconnexion</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                </button>
+
+                <div class="search-bar">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                    <input type="text" data-i18n-placeholder="searchPlaceholder" placeholder="Rechercher des cours...">
+                </div>
+
+                <div class="header-actions">
+                    <button class="icon-btn" id="notificationBtn" title="Notifications">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                        <span class="notification-badge"></span>
+                    </button>
+
+                    <button class="icon-btn" id="themeToggle" title="Toggle theme">
+                        <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                        <svg class="moon-icon" style="display:none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    </button>
+
+                    <div class="lang-switcher">
+                        <button class="lang-btn active" data-lang="fr">FR</button>
+                        <button class="lang-btn" data-lang="en">EN</button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                <!-- Welcome Section -->
+                <section class="welcome-section animate-in">
+                    <h1 data-i18n="welcomeTitle">Bienvenue, Jean ! 👋</h1>
+                    <p data-i18n="welcomeSubtitle">Continuez votre apprentissage et atteignez vos objectifs.</p>
+                </section>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card primary animate-in">
+                        <div class="stat-icon">📚</div>
+                        <div class="stat-value">3</div>
+                        <div class="stat-label" data-i18n="coursesEnrolled">Cours inscrits</div>
+                        <div class="stat-trend up">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                            +1 <span data-i18n="thisMonth">ce mois</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card animate-in">
+                        <div class="stat-icon">⏱️</div>
+                        <div class="stat-value">24h</div>
+                        <div class="stat-label" data-i18n="learningTime">Temps d'apprentissage</div>
+                        <div class="stat-trend up">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                            +5h <span data-i18n="thisWeek">cette semaine</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card animate-in">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-value">68%</div>
+                        <div class="stat-label" data-i18n="avgProgress">Progression moyenne</div>
+                        <div class="stat-trend up">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                            +12%
+                        </div>
+                    </div>
+
+                    <div class="stat-card animate-in">
+                        <div class="stat-icon">🏆</div>
+                        <div class="stat-value">7</div>
+                        <div class="stat-label" data-i18n="badgesEarned">Badges obtenus</div>
+                        <div class="stat-trend up">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                            +2 <span data-i18n="recently">récemment</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Continue Learning Section -->
+                <section class="continue-learning">
+                    <div class="section-header">
+                        <h2 data-i18n="continueLearning">Continuer l'apprentissage</h2>
+                        <a href="#" class="view-all-btn">
+                            <span data-i18n="viewAll">Voir tout</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                        </a>
+                    </div>
+
+                    <div class="courses-grid">
+                        <!-- Course Card 1 -->
+                        <div class="course-card animate-in">
+                            <div class="course-thumbnail" style="background: linear-gradient(135deg, #3b82f6, #8b5cf6);">
+                                <span class="level-badge intermediate" data-i18n="intermediate">Intermédiaire</span>
+                                <div class="play-overlay">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                                </div>
+                                <span style="font-size: 4rem; z-index: 1;">⚛️</span>
+                            </div>
+                            <div class="course-content">
+                                <h3 class="course-title">React.js Avancé - Hooks et Patterns</h3>
+                                <div class="course-meta">
+                                    <span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                        12h 30min
+                                    </span>
+                                    <span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                                        24 <span data-i18n="lessons">leçons</span>
+                                    </span>
+                                </div>
+                                <div class="progress-container">
+                                    <div class="progress-header">
+                                        <span class="progress-label" data-i18n="progress">Progression</span>
+                                        <span class="progress-value">75%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 75%"></div>
+                                    </div>
+                                </div>
+                                <button class="continue-btn">
+                                    <span data-i18n="continue">Continuer</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Course Card 2 -->
+                        <div class="course-card animate-in">
+                            <div class="course-thumbnail" style="background: linear-gradient(135deg, #22c55e, #14b8a6);">
+                                <span class="level-badge beginner" data-i18n="beginner">Débutant</span>
+                                <div class="play-overlay">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                                </div>
+                                <span style="font-size: 4rem; z-index: 1;">🐍</span>
+                            </div>
+                            <div class="course-content">
+                                <h3 class="course-title">Python pour la Data Science</h3>
+                                <div class="course-meta">
+                                    <span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                        18h 45min
+                                    </span>
+                                    <span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                                        36 <span data-i18n="lessons">leçons</span>
+                                    </span>
+                                </div>
+                                <div class="progress-container">
+                                    <div class="progress-header">
+                                        <span class="progress-label" data-i18n="progress">Progression</span>
+                                        <span class="progress-value">45%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 45%"></div>
+                                    </div>
+                                </div>
+                                <button class="continue-btn">
+                                    <span data-i18n="continue">Continuer</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Course Card 3 -->
+                        <div class="course-card animate-in">
+                            <div class="course-thumbnail" style="background: linear-gradient(135deg, #f59e0b, #ef4444);">
+                                <span class="level-badge advanced" data-i18n="advanced">Avancé</span>
+                                <div class="play-overlay">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                                </div>
+                                <span style="font-size: 4rem; z-index: 1;">🔧</span>
+                            </div>
+                            <div class="course-content">
+                                <h3 class="course-title">DevOps & CI/CD avec Docker et Kubernetes</h3>
+                                <div class="course-meta">
+                                    <span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                        22h 15min
+                                    </span>
+                                    <span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                                        42 <span data-i18n="lessons">leçons</span>
+                                    </span>
+                                </div>
+                                <div class="progress-container">
+                                    <div class="progress-header">
+                                        <span class="progress-label" data-i18n="progress">Progression</span>
+                                        <span class="progress-value">20%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 20%"></div>
+                                    </div>
+                                </div>
+                                <button class="continue-btn">
+                                    <span data-i18n="continue">Continuer</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Recent Badges Section -->
+                <section class="recent-badges">
+                    <div class="section-header">
+                        <h2 data-i18n="recentBadges">Badges récents</h2>
+                        <a href="#" class="view-all-btn">
+                            <span data-i18n="viewAll">Voir tout</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                        </a>
+                    </div>
+
+                    <div class="badges-grid">
+                        <div class="badge-card">
+                            <div class="badge-icon achievement">🏆</div>
+                            <div class="badge-name" data-i18n="firstCourse">Premier cours terminé</div>
+                            <div class="badge-points">+100 pts</div>
+                            <div class="badge-date">5 déc. 2024</div>
+                        </div>
+
+                        <div class="badge-card">
+                            <div class="badge-icon milestone">🎯</div>
+                            <div class="badge-name" data-i18n="weekStreak">7 jours consécutifs</div>
+                            <div class="badge-points">+50 pts</div>
+                            <div class="badge-date">3 déc. 2024</div>
+                        </div>
+
+                        <div class="badge-card">
+                            <div class="badge-icon skill">💡</div>
+                            <div class="badge-name" data-i18n="quizMaster">Maître des quiz</div>
+                            <div class="badge-points">+75 pts</div>
+                            <div class="badge-date">1 déc. 2024</div>
+                        </div>
+
+                        <div class="badge-card">
+                            <div class="badge-icon special">⭐</div>
+                            <div class="badge-name" data-i18n="fastLearner">Apprenant rapide</div>
+                            <div class="badge-points">+150 pts</div>
+                            <div class="badge-date">28 nov. 2024</div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <svg class="toast-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <span id="toastMessage"></span>
+    </div>
+
+    <script>
+        // Translations
+        const translations = {
+            fr: {
+                dashboard: "Tableau de bord",
+                myCourses: "Mes cours",
+                exploreCourses: "Explorer les cours",
+                achievements: "Réalisations",
+                settings: "Paramètres",
+                logout: "Déconnexion",
+                learner: "Apprenant",
+                searchPlaceholder: "Rechercher des cours...",
+                welcomeTitle: "Bienvenue, Jean ! 👋",
+                welcomeSubtitle: "Continuez votre apprentissage et atteignez vos objectifs.",
+                coursesEnrolled: "Cours inscrits",
+                learningTime: "Temps d'apprentissage",
+                avgProgress: "Progression moyenne",
+                badgesEarned: "Badges obtenus",
+                thisMonth: "ce mois",
+                thisWeek: "cette semaine",
+                recently: "récemment",
+                continueLearning: "Continuer l'apprentissage",
+                viewAll: "Voir tout",
+                lessons: "leçons",
+                progress: "Progression",
+                continue: "Continuer",
+                recentBadges: "Badges récents",
+                beginner: "Débutant",
+                intermediate: "Intermédiaire",
+                advanced: "Avancé",
+                firstCourse: "Premier cours terminé",
+                weekStreak: "7 jours consécutifs",
+                quizMaster: "Maître des quiz",
+                fastLearner: "Apprenant rapide",
+                themeChanged: "Thème changé",
+                languageChanged: "Langue changée en Français"
+            },
+            en: {
+                dashboard: "Dashboard",
+                myCourses: "My Courses",
+                exploreCourses: "Explore Courses",
+                achievements: "Achievements",
+                settings: "Settings",
+                logout: "Logout",
+                learner: "Learner",
+                searchPlaceholder: "Search courses...",
+                welcomeTitle: "Welcome, Jean! 👋",
+                welcomeSubtitle: "Continue learning and reach your goals.",
+                coursesEnrolled: "Courses Enrolled",
+                learningTime: "Learning Time",
+                avgProgress: "Average Progress",
+                badgesEarned: "Badges Earned",
+                thisMonth: "this month",
+                thisWeek: "this week",
+                recently: "recently",
+                continueLearning: "Continue Learning",
+                viewAll: "View All",
+                lessons: "lessons",
+                progress: "Progress",
+                continue: "Continue",
+                recentBadges: "Recent Badges",
+                beginner: "Beginner",
+                intermediate: "Intermediate",
+                advanced: "Advanced",
+                firstCourse: "First Course Completed",
+                weekStreak: "7 Day Streak",
+                quizMaster: "Quiz Master",
+                fastLearner: "Fast Learner",
+                themeChanged: "Theme changed",
+                languageChanged: "Language changed to English"
+            }
+        };
+
+        let currentLang = localStorage.getItem('lms-locale') || 'fr';
+        let currentTheme = localStorage.getItem('lms-theme') || 'light';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set initial theme
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            updateThemeIcon();
+
+            // Set initial language
+            updateLanguage(currentLang);
+
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+            mobileMenuBtn.addEventListener('click', () => {
+                sidebar.classList.toggle('open');
+                sidebarOverlay.classList.toggle('active');
+            });
+
+            sidebarOverlay.addEventListener('click', () => {
+                sidebar.classList.remove('open');
+                sidebarOverlay.classList.remove('active');
+            });
+
+            // Theme toggle
+            const themeToggle = document.getElementById('themeToggle');
+            themeToggle.addEventListener('click', () => {
+                currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', currentTheme);
+                localStorage.setItem('lms-theme', currentTheme);
+                updateThemeIcon();
+                showToast(translations[currentLang].themeChanged);
+            });
+
+            // Language switcher
+            const langBtns = document.querySelectorAll('.lang-btn');
+            langBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const lang = btn.dataset.lang;
+                    if (lang !== currentLang) {
+                        currentLang = lang;
+                        localStorage.setItem('lms-locale', currentLang);
+                        updateLanguage(currentLang);
+                        showToast(translations[currentLang].languageChanged);
+                    }
+                });
+            });
+
+            // Navigation active state
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    navItems.forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+
+                    // Close mobile menu
+                    sidebar.classList.remove('open');
+                    sidebarOverlay.classList.remove('active');
+                });
+            });
+
+            // Notification button
+            document.getElementById('notificationBtn').addEventListener('click', () => {
+                showToast('3 nouvelles notifications');
+            });
+
+            // Continue buttons
+            document.querySelectorAll('.continue-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    showToast('Ouverture du cours...');
+                });
+            });
+        });
+
+        function updateThemeIcon() {
+            const sunIcon = document.querySelector('.sun-icon');
+            const moonIcon = document.querySelector('.moon-icon');
+
+            if (currentTheme === 'dark') {
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'block';
+            } else {
+                sunIcon.style.display = 'block';
+                moonIcon.style.display = 'none';
+            }
+        }
+
+        function updateLanguage(lang) {
+            // Update HTML lang attribute
+            document.documentElement.setAttribute('lang', lang);
+
+            // Update language buttons
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+
+            // Update all translatable elements
+            const t = translations[lang];
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.dataset.i18n;
+                if (t[key]) {
+                    el.textContent = t[key];
+                }
+            });
+
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.dataset.i18nPlaceholder;
+                if (t[key]) {
+                    el.placeholder = t[key];
+                }
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
