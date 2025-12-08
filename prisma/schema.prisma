@@ -21,7 +21,7 @@ model User {
   firstName     String
   lastName      String
   avatar        String?
-  role          Role      @default(LEARNER)
+  role          String    @default("LEARNER")  // LEARNER, INSTRUCTOR, ADMIN
   bio           String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -46,11 +46,7 @@ model User {
   @@index([role])
 }
 
-enum Role {
-  LEARNER
-  INSTRUCTOR
-  ADMIN
-}
+// Role values: LEARNER, INSTRUCTOR, ADMIN
 
 // ============================================
 // COURS ET MODULES
@@ -64,7 +60,7 @@ model Course {
   shortDescription String?
   thumbnail       String?
   duration        Int       @default(0)  // en minutes
-  level           Level     @default(BEGINNER)
+  level           String    @default("BEGINNER")  // BEGINNER, INTERMEDIATE, ADVANCED, EXPERT
   category        String
   tags            String?   // JSON array stored as string
   price           Float     @default(0)
@@ -90,12 +86,7 @@ model Course {
   @@index([isPublished])
 }
 
-enum Level {
-  BEGINNER
-  INTERMEDIATE
-  ADVANCED
-  EXPERT
-}
+// Level values: BEGINNER, INTERMEDIATE, ADVANCED, EXPERT
 
 model Module {
   id          String   @id @default(cuid())
@@ -121,7 +112,7 @@ model Lesson {
   videoUrl    String?
   duration    Int         @default(0)  // en minutes
   order       Int
-  type        LessonType  @default(TEXT)
+  type        String      @default("TEXT")  // TEXT, VIDEO, QUIZ, ASSIGNMENT, INTERACTIVE
   isPreview   Boolean     @default(false)
   resources   String?     // JSON array for downloadable resources
   createdAt   DateTime    @default(now())
@@ -138,13 +129,7 @@ model Lesson {
   @@index([moduleId])
 }
 
-enum LessonType {
-  TEXT
-  VIDEO
-  QUIZ
-  ASSIGNMENT
-  INTERACTIVE
-}
+// LessonType values: TEXT, VIDEO, QUIZ, ASSIGNMENT, INTERACTIVE
 
 // ============================================
 // PROGRESSION ET INSCRIPTIONS
@@ -154,7 +139,7 @@ model Enrollment {
   id           String           @id @default(cuid())
   enrolledAt   DateTime         @default(now())
   completedAt  DateTime?
-  status       EnrollmentStatus @default(ACTIVE)
+  status       String           @default("ACTIVE")  // ACTIVE, COMPLETED, PAUSED, CANCELLED
 
   // Relations
   userId       String
@@ -167,12 +152,7 @@ model Enrollment {
   @@index([courseId])
 }
 
-enum EnrollmentStatus {
-  ACTIVE
-  COMPLETED
-  PAUSED
-  CANCELLED
-}
+// EnrollmentStatus values: ACTIVE, COMPLETED, PAUSED, CANCELLED
 
 model CourseProgress {
   id                String   @id @default(cuid())
@@ -236,7 +216,7 @@ model Quiz {
 model Question {
   id          String       @id @default(cuid())
   text        String
-  type        QuestionType @default(MULTIPLE_CHOICE)
+  type        String       @default("MULTIPLE_CHOICE")  // MULTIPLE_CHOICE, SINGLE_CHOICE, TRUE_FALSE, SHORT_ANSWER, FILL_BLANK
   explanation String?
   points      Int          @default(1)
   order       Int
@@ -249,13 +229,7 @@ model Question {
   @@index([quizId])
 }
 
-enum QuestionType {
-  MULTIPLE_CHOICE
-  SINGLE_CHOICE
-  TRUE_FALSE
-  SHORT_ANSWER
-  FILL_BLANK
-}
+// QuestionType values: MULTIPLE_CHOICE, SINGLE_CHOICE, TRUE_FALSE, SHORT_ANSWER, FILL_BLANK
 
 model Answer {
   id          String  @id @default(cuid())
@@ -318,19 +292,14 @@ model Badge {
   icon        String
   criteria    String      // JSON des critères d'obtention
   points      Int         @default(0)
-  category    BadgeCategory @default(ACHIEVEMENT)
+  category    String        @default("ACHIEVEMENT")  // ACHIEVEMENT, MILESTONE, SKILL, SPECIAL
   createdAt   DateTime    @default(now())
 
   // Relations
   userBadges  UserBadge[]
 }
 
-enum BadgeCategory {
-  ACHIEVEMENT
-  MILESTONE
-  SKILL
-  SPECIAL
-}
+// BadgeCategory values: ACHIEVEMENT, MILESTONE, SKILL, SPECIAL
 
 model UserBadge {
   id        String   @id @default(cuid())
@@ -451,7 +420,7 @@ model Notification {
   id        String           @id @default(cuid())
   title     String
   message   String
-  type      NotificationType @default(INFO)
+  type      String           @default("INFO")  // INFO, SUCCESS, WARNING, ACHIEVEMENT, COURSE_UPDATE, REMINDER
   isRead    Boolean          @default(false)
   link      String?
   createdAt DateTime         @default(now())
@@ -464,11 +433,4 @@ model Notification {
   @@index([isRead])
 }
 
-enum NotificationType {
-  INFO
-  SUCCESS
-  WARNING
-  ACHIEVEMENT
-  COURSE_UPDATE
-  REMINDER
-}
+// NotificationType values: INFO, SUCCESS, WARNING, ACHIEVEMENT, COURSE_UPDATE, REMINDER
