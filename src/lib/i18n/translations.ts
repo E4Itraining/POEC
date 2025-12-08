@@ -187,6 +187,19 @@ export const translations = {
       expandSection: 'Expand section',
       collapseSection: 'Collapse section',
     },
+    // Academies
+    academies: {
+      title: 'Training Academies',
+      subtitle: 'Specialized learning paths designed by industry experts. Master cutting-edge technologies with hands-on courses and real-world projects.',
+      courses: 'courses',
+      learningPaths: 'learning paths',
+      explore: 'Explore',
+      stats: {
+        expertCourses: 'Expert-led Courses',
+        learningPaths: 'Learning Paths',
+        activeLearners: 'Active Learners',
+      },
+    },
   },
   fr: {
     // Navigation
@@ -373,6 +386,19 @@ export const translations = {
       closeMenu: 'Fermer le menu',
       expandSection: 'Développer la section',
       collapseSection: 'Réduire la section',
+    },
+    // Academies
+    academies: {
+      title: 'Académies de Formation',
+      subtitle: 'Parcours d\'apprentissage spécialisés conçus par des experts. Maîtrisez les technologies de pointe avec des cours pratiques et des projets concrets.',
+      courses: 'cours',
+      learningPaths: 'parcours',
+      explore: 'Explorer',
+      stats: {
+        expertCourses: 'Cours par des experts',
+        learningPaths: 'Parcours d\'apprentissage',
+        activeLearners: 'Apprenants actifs',
+      },
     },
   },
 } as const
