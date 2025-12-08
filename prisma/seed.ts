@@ -1,4 +1,4 @@
-import { PrismaClient, Role, Level, LessonType, QuestionType, BadgeCategory } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 
 const prisma = new PrismaClient()
@@ -18,7 +18,7 @@ async function main() {
       password: adminPassword,
       firstName: 'Admin',
       lastName: 'System',
-      role: Role.ADMIN,
+      role: 'ADMIN',
       bio: 'Administrateur de la plateforme LMS',
     },
   })
@@ -31,7 +31,7 @@ async function main() {
       password: userPassword,
       firstName: 'Marie',
       lastName: 'Dupont',
-      role: Role.INSTRUCTOR,
+      role: 'INSTRUCTOR',
       bio: 'Formatrice certifiée avec 10 ans d\'expérience en gestion de projets IT',
     },
   })
@@ -44,7 +44,7 @@ async function main() {
       password: userPassword,
       firstName: 'Jean',
       lastName: 'Martin',
-      role: Role.LEARNER,
+      role: 'LEARNER',
       bio: 'Passionné par les nouvelles technologies',
     },
   })
@@ -60,7 +60,7 @@ async function main() {
         icon: '🎯',
         criteria: JSON.stringify({ type: 'lessons_completed', count: 1 }),
         points: 10,
-        category: BadgeCategory.ACHIEVEMENT,
+        category: 'ACHIEVEMENT',
       },
     }),
     prisma.badge.upsert({
@@ -72,7 +72,7 @@ async function main() {
         icon: '🔭',
         criteria: JSON.stringify({ type: 'enrollments', count: 3 }),
         points: 25,
-        category: BadgeCategory.MILESTONE,
+        category: 'MILESTONE',
       },
     }),
     prisma.badge.upsert({
@@ -84,7 +84,7 @@ async function main() {
         icon: '🏆',
         criteria: JSON.stringify({ type: 'perfect_quizzes', count: 5 }),
         points: 50,
-        category: BadgeCategory.SKILL,
+        category: 'SKILL',
       },
     }),
     prisma.badge.upsert({
@@ -96,7 +96,7 @@ async function main() {
         icon: '🎓',
         criteria: JSON.stringify({ type: 'courses_completed', count: 1 }),
         points: 100,
-        category: BadgeCategory.ACHIEVEMENT,
+        category: 'ACHIEVEMENT',
       },
     }),
     prisma.badge.upsert({
@@ -108,7 +108,7 @@ async function main() {
         icon: '📅',
         criteria: JSON.stringify({ type: 'login_streak', count: 7 }),
         points: 30,
-        category: BadgeCategory.MILESTONE,
+        category: 'MILESTONE',
       },
     }),
   ])
@@ -124,7 +124,7 @@ async function main() {
       shortDescription: 'Apprenez à aligner l\'IT avec les objectifs métier',
       thumbnail: 'https://images.unsplash.com/photo-1551434678-e076c223a692?w=800',
       duration: 480,
-      level: Level.INTERMEDIATE,
+      level: 'INTERMEDIATE',
       category: 'Management IT',
       tags: JSON.stringify(['Gouvernance', 'COBIT', 'ITIL', 'Management']),
       isFree: true,
@@ -144,7 +144,7 @@ async function main() {
       shortDescription: 'Maîtrisez Scrum, Kanban et SAFe',
       thumbnail: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=800',
       duration: 360,
-      level: Level.BEGINNER,
+      level: 'BEGINNER',
       category: 'Gestion de Projet',
       tags: JSON.stringify(['Agile', 'Scrum', 'Kanban', 'SAFe']),
       isFree: true,
@@ -164,7 +164,7 @@ async function main() {
       shortDescription: 'Protégez votre organisation des cybermenaces',
       thumbnail: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800',
       duration: 420,
-      level: Level.INTERMEDIATE,
+      level: 'INTERMEDIATE',
       category: 'Sécurité',
       tags: JSON.stringify(['Cybersécurité', 'RGPD', 'ISO 27001', 'Risk Management']),
       isFree: true,
@@ -212,7 +212,7 @@ La gouvernance IT est l'ensemble des processus et pratiques qui assurent que les
       `,
       duration: 15,
       order: 1,
-      type: LessonType.TEXT,
+      type: 'TEXT',
       isPreview: true,
       moduleId: module1.id,
     },
@@ -258,7 +258,7 @@ Norme internationale pour la gouvernance IT des organisations.
       `,
       duration: 20,
       order: 2,
-      type: LessonType.TEXT,
+      type: 'TEXT',
       moduleId: module1.id,
     },
   })
@@ -279,7 +279,7 @@ Norme internationale pour la gouvernance IT des organisations.
   const question1 = await prisma.question.create({
     data: {
       text: 'Quels sont les piliers de la gouvernance IT ?',
-      type: QuestionType.MULTIPLE_CHOICE,
+      type: 'MULTIPLE_CHOICE',
       explanation: 'Les 5 piliers sont : alignement stratégique, création de valeur, gestion des risques, gestion des ressources et mesure de la performance.',
       points: 2,
       order: 1,
@@ -299,7 +299,7 @@ Norme internationale pour la gouvernance IT des organisations.
   const question2 = await prisma.question.create({
     data: {
       text: 'COBIT est développé par quelle organisation ?',
-      type: QuestionType.SINGLE_CHOICE,
+      type: 'SINGLE_CHOICE',
       explanation: 'COBIT est développé et maintenu par l\'ISACA (Information Systems Audit and Control Association).',
       points: 1,
       order: 2,
@@ -319,7 +319,7 @@ Norme internationale pour la gouvernance IT des organisations.
   const question3 = await prisma.question.create({
     data: {
       text: 'ITIL se concentre principalement sur la gestion des services IT.',
-      type: QuestionType.TRUE_FALSE,
+      type: 'TRUE_FALSE',
       explanation: 'Vrai. ITIL (Information Technology Infrastructure Library) est un ensemble de bonnes pratiques spécifiquement conçu pour la gestion des services IT.',
       points: 1,
       order: 3,
@@ -352,7 +352,7 @@ Norme internationale pour la gouvernance IT des organisations.
         content: `# Évaluation de la maturité IT\n\nL'évaluation de la maturité permet de comprendre où se situe votre organisation...`,
         duration: 25,
         order: 1,
-        type: LessonType.TEXT,
+        type: 'TEXT',
         moduleId: module2.id,
       },
       {
@@ -361,7 +361,7 @@ Norme internationale pour la gouvernance IT des organisations.
         content: `# Plan de mise en œuvre\n\n## Étapes clés\n\n1. Diagnostic initial\n2. Définition des objectifs\n3. Choix du framework...`,
         duration: 30,
         order: 2,
-        type: LessonType.TEXT,
+        type: 'TEXT',
         moduleId: module2.id,
       },
     ],
@@ -385,7 +385,7 @@ Norme internationale pour la gouvernance IT des organisations.
         content: `# Le Manifeste Agile\n\n## Les 4 valeurs\n\n1. Les individus et leurs interactions plus que les processus et les outils\n2. Des logiciels opérationnels plus qu'une documentation exhaustive\n3. La collaboration avec les clients plus que la négociation contractuelle\n4. L'adaptation au changement plus que le suivi d'un plan`,
         duration: 20,
         order: 1,
-        type: LessonType.TEXT,
+        type: 'TEXT',
         isPreview: true,
         moduleId: module3.id,
       },
@@ -395,7 +395,7 @@ Norme internationale pour la gouvernance IT des organisations.
         content: `# Scrum en pratique\n\n## Les 3 rôles\n\n- Product Owner\n- Scrum Master\n- Équipe de développement\n\n## Les événements\n\n- Sprint Planning\n- Daily Scrum\n- Sprint Review\n- Sprint Retrospective`,
         duration: 35,
         order: 2,
-        type: LessonType.TEXT,
+        type: 'TEXT',
         moduleId: module3.id,
       },
     ],
