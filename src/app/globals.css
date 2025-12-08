@@ -231,3 +231,98 @@
 .glass {
   @apply bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm;
 }
+
+/* Modern gradient backgrounds */
+.gradient-primary {
+  @apply bg-gradient-to-br from-primary via-primary/90 to-primary/70;
+}
+
+.gradient-mesh {
+  background:
+    radial-gradient(at 40% 20%, hsla(var(--primary) / 0.3) 0px, transparent 50%),
+    radial-gradient(at 80% 0%, hsla(var(--primary) / 0.2) 0px, transparent 50%),
+    radial-gradient(at 0% 50%, hsla(var(--primary) / 0.1) 0px, transparent 50%);
+}
+
+/* Smooth page transitions */
+.page-transition {
+  @apply animate-fade-in;
+}
+
+/* Card with subtle shadow */
+.card-shadow {
+  @apply shadow-sm hover:shadow-md transition-shadow duration-300;
+}
+
+/* Badge pulse animation */
+@keyframes badge-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.badge-pulse {
+  animation: badge-pulse 2s ease-in-out infinite;
+}
+
+/* Progress bar with shimmer effect */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.progress-shimmer {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--primary)) 0%,
+    hsl(var(--primary) / 0.8) 50%,
+    hsl(var(--primary)) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Focus styles for better accessibility */
+.focus-ring {
+  @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --border: 222.2 84% 20%;
+  }
+  .dark {
+    --border: 210 40% 80%;
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+  }
+}
