@@ -119,7 +119,7 @@
 
 /* Content prose styling */
 .prose-content {
-  @apply prose prose-slate dark:prose-invert max-w-none;
+  @apply max-w-none;
 }
 
 .prose-content h1 {
