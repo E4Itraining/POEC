@@ -67,6 +67,12 @@ export function Header({ onMenuClick, showMenuButton = false }: HeaderProps) {
         {/* Navigation principale */}
         <nav className="hidden md:flex items-center gap-6 flex-1" aria-label="Navigation principale">
           <Link
+            href="/academies"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Academies
+          </Link>
+          <Link
             href="/courses"
             className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
           >
