@@ -134,9 +134,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Configuration pour permettre les gros fichiers
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-}
+// Configuration pour l'App Router - pas besoin de désactiver bodyParser
+// Next.js App Router gère automatiquement les fichiers multipart
+export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
