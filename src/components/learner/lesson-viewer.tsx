@@ -28,9 +28,24 @@ import {
   StickyNote,
   Menu,
   X,
+  Terminal,
+  Trophy,
+  Code2,
+  Play,
 } from 'lucide-react'
 
 const ReactPlayer = dynamic(() => import('react-player'), { ssr: false })
+
+interface LabAssignment {
+  id: string
+  title: string
+  description: string
+  instructions: string
+  difficulty: string
+  estimatedTime: number
+  points: number
+  startingCode: string | null
+}
 
 interface LessonViewerProps {
   lesson: {
@@ -42,6 +57,7 @@ interface LessonViewerProps {
     duration: number
     type: string
     resources: string | null
+    labAssignments?: LabAssignment[]
   }
   course: {
     slug: string
@@ -216,14 +232,24 @@ export function LessonViewer({
             </div>
           )}
 
-          {/* Tabs for Content/Notes/Resources */}
+          {/* Tabs for Content/Lab/Notes/Resources */}
           <Tabs defaultValue="content" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:inline-flex">
+            <TabsList className={cn(
+              "grid w-full lg:w-auto lg:inline-flex",
+              lesson.labAssignments && lesson.labAssignments.length > 0 ? "grid-cols-4" : "grid-cols-3"
+            )}>
               <TabsTrigger value="content" className="gap-2">
                 <FileText className="h-4 w-4" />
                 <span className="hidden sm:inline">{t.learn.lessonContent}</span>
                 <span className="sm:hidden">Content</span>
               </TabsTrigger>
+              {lesson.labAssignments && lesson.labAssignments.length > 0 && (
+                <TabsTrigger value="lab" className="gap-2">
+                  <Terminal className="h-4 w-4" />
+                  <span className="hidden sm:inline">Lab</span>
+                  <span className="sm:hidden">Lab</span>
+                </TabsTrigger>
+              )}
               <TabsTrigger value="notes" className="gap-2">
                 <StickyNote className="h-4 w-4" />
                 <span className="hidden sm:inline">{t.learn.notes}</span>
@@ -276,6 +302,85 @@ export function LessonViewer({
                 </Card>
               )}
             </TabsContent>
+
+            {/* Lab Tab Content */}
+            {lesson.labAssignments && lesson.labAssignments.length > 0 && (
+              <TabsContent value="lab" className="mt-6 space-y-6">
+                {lesson.labAssignments.map((lab) => (
+                  <Card key={lab.id} className="border-primary/20">
+                    <CardHeader>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 rounded-lg bg-pink-100 dark:bg-pink-900/30">
+                            <Terminal className="h-5 w-5 text-pink-600 dark:text-pink-400" />
+                          </div>
+                          <div>
+                            <CardTitle className="text-lg">{lab.title}</CardTitle>
+                            <div className="flex items-center gap-3 mt-1 text-sm text-muted-foreground">
+                              <span className="flex items-center gap-1">
+                                <Clock className="h-3.5 w-3.5" />
+                                {lab.estimatedTime} min
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <Trophy className="h-3.5 w-3.5 text-yellow-500" />
+                                {lab.points} pts
+                              </span>
+                              <Badge className={cn(
+                                "text-xs",
+                                lab.difficulty === 'EASY' && 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100',
+                                lab.difficulty === 'INTERMEDIATE' && 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100',
+                                lab.difficulty === 'HARD' && 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-100',
+                                lab.difficulty === 'EXPERT' && 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100'
+                              )}>
+                                {lab.difficulty === 'EASY' && 'Facile'}
+                                {lab.difficulty === 'INTERMEDIATE' && 'Intermédiaire'}
+                                {lab.difficulty === 'HARD' && 'Difficile'}
+                                {lab.difficulty === 'EXPERT' && 'Expert'}
+                              </Badge>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <p className="text-muted-foreground">{lab.description}</p>
+
+                      {/* Instructions du lab */}
+                      <div className="space-y-2">
+                        <h4 className="font-medium flex items-center gap-2">
+                          <BookOpen className="h-4 w-4" />
+                          Instructions
+                        </h4>
+                        <div className="prose-content bg-muted/50 rounded-lg p-4 max-h-96 overflow-auto">
+                          <div dangerouslySetInnerHTML={{ __html: lab.instructions.replace(/\n/g, '<br />').replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>') }} />
+                        </div>
+                      </div>
+
+                      {/* Code de départ */}
+                      {lab.startingCode && (
+                        <div className="space-y-2">
+                          <h4 className="font-medium flex items-center gap-2">
+                            <Code2 className="h-4 w-4" />
+                            Code de départ
+                          </h4>
+                          <pre className="bg-slate-900 text-slate-50 rounded-lg p-4 overflow-auto text-sm">
+                            <code>{lab.startingCode}</code>
+                          </pre>
+                        </div>
+                      )}
+
+                      {/* Bouton pour lancer le lab */}
+                      <div className="flex justify-end pt-4">
+                        <Button className="gap-2">
+                          <Play className="h-4 w-4" />
+                          {locale === 'fr' ? 'Lancer le lab' : 'Start lab'}
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </TabsContent>
+            )}
 
             <TabsContent value="notes" className="mt-6">
               <Card>

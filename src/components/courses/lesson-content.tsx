@@ -18,9 +18,26 @@ import {
   Bookmark,
   Share2,
   HelpCircle,
+  Terminal,
+  Trophy,
+  Code2,
+  Play,
+  BookOpen,
 } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import { formatDuration } from '@/lib/utils'
 import { useToast } from '@/hooks/use-toast'
+
+interface LabAssignment {
+  id: string
+  title: string
+  description: string
+  instructions: string
+  difficulty: string
+  estimatedTime: number
+  points: number
+  startingCode: string | null
+}
 
 interface LessonContentProps {
   lesson: {
@@ -38,6 +55,7 @@ interface LessonContentProps {
       passingScore: number
       timeLimit: number | null
     } | null
+    labAssignments?: LabAssignment[]
   }
   courseSlug: string
   prevLesson: { id: string; title: string } | null
@@ -201,6 +219,97 @@ export function LessonContent({
                 </Button>
               </CardContent>
             </Card>
+          )}
+
+          {/* Labs pratiques si disponibles */}
+          {lesson.labAssignments && lesson.labAssignments.length > 0 && (
+            <div className="mt-8 space-y-6">
+              <h2 className="text-xl font-bold flex items-center gap-2">
+                <Terminal className="h-5 w-5 text-pink-500" />
+                Travaux Pratiques
+              </h2>
+              {lesson.labAssignments.map((lab) => (
+                <Card key={lab.id} className="border-pink-200 dark:border-pink-800">
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 rounded-lg bg-pink-100 dark:bg-pink-900/30">
+                          <Terminal className="h-5 w-5 text-pink-600 dark:text-pink-400" />
+                        </div>
+                        <div>
+                          <CardTitle className="text-lg">{lab.title}</CardTitle>
+                          <div className="flex items-center gap-3 mt-1 text-sm text-muted-foreground">
+                            <span className="flex items-center gap-1">
+                              <Clock className="h-3.5 w-3.5" />
+                              {lab.estimatedTime} min
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <Trophy className="h-3.5 w-3.5 text-yellow-500" />
+                              {lab.points} pts
+                            </span>
+                            <Badge className={cn(
+                              "text-xs",
+                              lab.difficulty === 'EASY' && 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100',
+                              lab.difficulty === 'INTERMEDIATE' && 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100',
+                              lab.difficulty === 'HARD' && 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-100',
+                              lab.difficulty === 'EXPERT' && 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100'
+                            )}>
+                              {lab.difficulty === 'EASY' && 'Facile'}
+                              {lab.difficulty === 'INTERMEDIATE' && 'Intermédiaire'}
+                              {lab.difficulty === 'HARD' && 'Difficile'}
+                              {lab.difficulty === 'EXPERT' && 'Expert'}
+                            </Badge>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <p className="text-muted-foreground">{lab.description}</p>
+
+                    {/* Instructions du lab */}
+                    <div className="space-y-2">
+                      <h4 className="font-medium flex items-center gap-2">
+                        <BookOpen className="h-4 w-4" />
+                        Instructions
+                      </h4>
+                      <div className="bg-muted/50 rounded-lg p-4 max-h-96 overflow-auto text-sm">
+                        <div
+                          className="prose-content"
+                          dangerouslySetInnerHTML={{
+                            __html: lab.instructions
+                              .replace(/\n/g, '<br />')
+                              .replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre class="bg-slate-900 text-slate-50 p-3 rounded-lg overflow-auto my-2"><code>$2</code></pre>')
+                              .replace(/`([^`]+)`/g, '<code class="bg-muted px-1 py-0.5 rounded text-sm">$1</code>')
+                          }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Code de départ */}
+                    {lab.startingCode && (
+                      <div className="space-y-2">
+                        <h4 className="font-medium flex items-center gap-2">
+                          <Code2 className="h-4 w-4" />
+                          Code de départ
+                        </h4>
+                        <pre className="bg-slate-900 text-slate-50 rounded-lg p-4 overflow-auto text-sm">
+                          <code>{lab.startingCode}</code>
+                        </pre>
+                      </div>
+                    )}
+
+                    {/* Bouton pour lancer le lab */}
+                    <div className="flex justify-end pt-4">
+                      <Button className="gap-2 bg-pink-600 hover:bg-pink-700">
+                        <Play className="h-4 w-4" />
+                        Lancer le lab
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           )}
 
           {/* Actions */}
