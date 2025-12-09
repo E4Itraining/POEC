@@ -90,7 +90,9 @@ export function CourseProgressCard({
         href={`/courses/${course.slug}/learn`}
         className={cn(
           'group flex items-center gap-4 rounded-xl p-3 transition-all duration-200',
-          'bg-card border border-border/50 hover:border-primary/30 hover:shadow-md',
+          'bg-card dark:bg-gradient-to-r dark:from-slate-900/90 dark:to-slate-950',
+          'border border-border/50 dark:border-white/10',
+          'hover:border-primary/30 dark:hover:border-white/20 hover:shadow-md dark:hover:shadow-primary/5',
           className
         )}
       >
@@ -136,8 +138,14 @@ export function CourseProgressCard({
     return (
       <div
         className={cn(
-          'group relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/10 via-card to-card border border-border/50',
-          'transition-all duration-300 hover:shadow-xl hover:shadow-primary/5 hover:border-primary/30',
+          'group relative overflow-hidden rounded-2xl border',
+          'bg-gradient-to-br from-primary/10 via-card to-card',
+          'dark:from-slate-900/90 dark:via-slate-950 dark:to-slate-950',
+          'border-border/50 dark:border-white/10',
+          'transition-all duration-300',
+          'hover:shadow-xl hover:shadow-primary/5',
+          'hover:border-primary/30 dark:hover:border-primary/40',
+          'dark:glow-primary',
           className
         )}
       >
@@ -225,8 +233,12 @@ export function CourseProgressCard({
   return (
     <div
       className={cn(
-        'group relative overflow-hidden rounded-2xl bg-card border border-border/50',
-        'transition-all duration-300 hover:shadow-lg hover:shadow-black/5 hover:border-primary/30',
+        'group relative overflow-hidden rounded-2xl border',
+        'bg-card dark:bg-gradient-to-b dark:from-slate-900/90 dark:to-slate-950',
+        'border-border/50 dark:border-white/10',
+        'transition-all duration-300',
+        'hover:shadow-lg hover:shadow-black/5 dark:hover:shadow-primary/5',
+        'hover:border-primary/30 dark:hover:border-white/20',
         className
       )}
     >

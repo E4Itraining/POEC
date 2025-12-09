@@ -42,39 +42,46 @@
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    /* Premium dark mode palette - inspired by modern dashboards */
+    --background: 230 25% 5%;
     --foreground: 210 40% 98%;
 
-    --card: 222.2 84% 4.9%;
+    --card: 230 20% 8%;
     --card-foreground: 210 40% 98%;
 
-    --popover: 222.2 84% 4.9%;
+    --popover: 230 20% 8%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 217.2 91.2% 59.8%;
+    --primary: 199 89% 48%;
     --primary-foreground: 222.2 47.4% 11.2%;
 
-    --secondary: 217.2 32.6% 17.5%;
+    --secondary: 230 15% 15%;
     --secondary-foreground: 210 40% 98%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 230 15% 15%;
+    --muted-foreground: 215 20.2% 55.1%;
 
-    --accent: 217.2 32.6% 17.5%;
+    --accent: 230 15% 18%;
     --accent-foreground: 210 40% 98%;
 
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 72.8% 50.6%;
     --destructive-foreground: 210 40% 98%;
 
-    --success: 142.1 70.6% 45.3%;
+    --success: 142.1 76.2% 42.3%;
     --success-foreground: 144.9 80.4% 10%;
 
-    --warning: 48 96.5% 53.1%;
+    --warning: 38 92% 50%;
     --warning-foreground: 20.9 91.7% 14.1%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    --border: 230 15% 18%;
+    --input: 230 15% 15%;
+    --ring: 199 89% 48%;
+
+    /* Extended palette for gradients and accents */
+    --cyan: 185 80% 50%;
+    --orange: 25 95% 53%;
+    --purple: 270 75% 60%;
+    --pink: 330 80% 60%;
   }
 }
 
@@ -242,6 +249,132 @@
     radial-gradient(at 40% 20%, hsla(var(--primary) / 0.3) 0px, transparent 50%),
     radial-gradient(at 80% 0%, hsla(var(--primary) / 0.2) 0px, transparent 50%),
     radial-gradient(at 0% 50%, hsla(var(--primary) / 0.1) 0px, transparent 50%);
+}
+
+/* Premium dark gradients - inspired by modern dashboard designs */
+.gradient-dark-card {
+  @apply bg-gradient-to-b from-slate-900/80 to-slate-950/90;
+}
+
+.gradient-cyan {
+  @apply bg-gradient-to-br from-cyan-400 to-cyan-600;
+}
+
+.gradient-orange {
+  @apply bg-gradient-to-br from-orange-400 to-amber-500;
+}
+
+.gradient-purple {
+  @apply bg-gradient-to-br from-purple-400 to-purple-600;
+}
+
+.gradient-blue {
+  @apply bg-gradient-to-br from-blue-500 to-blue-600;
+}
+
+/* Glow effects */
+.glow-primary {
+  box-shadow: 0 0 20px -5px hsl(var(--primary) / 0.5);
+}
+
+.glow-cyan {
+  box-shadow: 0 0 20px -5px hsl(185 80% 50% / 0.5);
+}
+
+.glow-orange {
+  box-shadow: 0 0 20px -5px hsl(25 95% 53% / 0.5);
+}
+
+.glow-success {
+  box-shadow: 0 0 20px -5px hsl(var(--success) / 0.5);
+}
+
+/* Premium glassmorphism */
+.glass-premium {
+  @apply bg-white/5 backdrop-blur-xl border border-white/10;
+}
+
+.glass-dark {
+  @apply bg-slate-900/50 backdrop-blur-xl border border-white/5;
+}
+
+/* Animated border glow */
+@keyframes border-glow {
+  0%, 100% {
+    border-color: hsl(var(--primary) / 0.3);
+  }
+  50% {
+    border-color: hsl(var(--primary) / 0.6);
+  }
+}
+
+.animate-border-glow {
+  animation: border-glow 2s ease-in-out infinite;
+}
+
+/* Floating animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Streak fire animation */
+@keyframes fire {
+  0%, 100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.2);
+  }
+}
+
+.animate-fire {
+  animation: fire 1.5s ease-in-out infinite;
+}
+
+/* Pulse dot animation */
+@keyframes pulse-dot {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.2);
+  }
+}
+
+.animate-pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* Icon shimmer effect */
+@keyframes icon-shimmer {
+  0% {
+    background-position: -100% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.icon-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: icon-shimmer 3s ease-in-out infinite;
 }
 
 /* Smooth page transitions */
