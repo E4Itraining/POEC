@@ -20,6 +20,7 @@ export const translations = {
     nav: {
       home: 'Home',
       courses: 'Courses',
+      docs: 'Documentation',
       myCourses: 'My Courses',
       dashboard: 'Dashboard',
       achievements: 'Achievements',
@@ -601,6 +602,7 @@ export const translations = {
     nav: {
       home: 'Accueil',
       courses: 'Cours',
+      docs: 'Documentation',
       myCourses: 'Mes Cours',
       dashboard: 'Tableau de bord',
       achievements: 'Accomplissements',
@@ -1182,6 +1184,7 @@ export const translations = {
     nav: {
       home: 'Startseite',
       courses: 'Kurse',
+      docs: 'Dokumentation',
       myCourses: 'Meine Kurse',
       dashboard: 'Dashboard',
       achievements: 'Erfolge',
@@ -1717,6 +1720,7 @@ export const translations = {
     nav: {
       home: 'Home',
       courses: 'Cursussen',
+      docs: 'Documentatie',
       myCourses: 'Mijn Cursussen',
       dashboard: 'Dashboard',
       achievements: 'Prestaties',

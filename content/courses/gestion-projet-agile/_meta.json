@@ -1,0 +1,27 @@
+{
+  "index": "Introduction",
+  "introduction-agilite": {
+    "title": "Introduction à l'Agilité",
+    "items": {
+      "manifeste-agile": "Le Manifeste Agile",
+      "valeurs-principes": "Valeurs et Principes",
+      "methodologies": "Méthodologies Agiles"
+    }
+  },
+  "scrum-pratique": {
+    "title": "Scrum en Pratique",
+    "items": {
+      "roles-scrum": "Rôles Scrum",
+      "evenements": "Événements Scrum",
+      "artefacts": "Artefacts"
+    }
+  },
+  "au-dela-scrum": {
+    "title": "Au-delà de Scrum",
+    "items": {
+      "kanban": "Kanban",
+      "safe": "SAFe",
+      "scrumban": "Scrumban"
+    }
+  }
+}

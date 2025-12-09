@@ -1,0 +1,171 @@
+---
+title: Les Rôles Scrum
+description: Product Owner, Scrum Master et Équipe de développement
+---
+
+# Les Rôles Scrum
+
+Scrum définit trois rôles essentiels qui forment ensemble la **Scrum Team**. Chaque rôle a des responsabilités distinctes mais complémentaires.
+
+<Callout type="info">
+  La Scrum Team est auto-organisée et cross-fonctionnelle. Elle choisit la meilleure façon d'accomplir son travail.
+</Callout>
+
+## Vue d'ensemble
+
+<CardGrid>
+  <Card title="Product Owner" icon="target">
+    Maximise la valeur du produit et gère le Product Backlog.
+  </Card>
+  <Card title="Scrum Master" icon="shield">
+    Facilite l'adoption de Scrum et élimine les obstacles.
+  </Card>
+  <Card title="Developers" icon="code">
+    Créent l'incrément du produit à chaque Sprint.
+  </Card>
+</CardGrid>
+
+## Product Owner
+
+Le **Product Owner** est responsable de maximiser la valeur du produit résultant du travail de l'équipe.
+
+### Responsabilités
+
+<Tabs items={["Backlog", "Vision", "Décisions"]}>
+  <Tab>
+    ### Gestion du Product Backlog
+
+    - Développer et communiquer clairement l'objectif du produit
+    - Créer et communiquer les éléments du Product Backlog
+    - Ordonner les éléments du Product Backlog
+    - S'assurer que le Product Backlog est transparent et compris
+  </Tab>
+  <Tab>
+    ### Vision produit
+
+    - Définir la vision et la stratégie produit
+    - Représenter les besoins des parties prenantes
+    - Communiquer la roadmap aux stakeholders
+    - Valider les incréments livrés
+  </Tab>
+  <Tab>
+    ### Prise de décision
+
+    - Arbitrer les priorités
+    - Accepter ou refuser le travail réalisé
+    - Décider des dates de release
+    - Une seule personne, pas un comité
+  </Tab>
+</Tabs>
+
+### Caractéristiques clés
+
+| Compétence | Description |
+|------------|-------------|
+| **Disponibilité** | Accessible à l'équipe pour clarifier les besoins |
+| **Décisionnel** | Capable de prendre des décisions rapidement |
+| **Vision** | Comprend le marché et les utilisateurs |
+| **Communication** | Articule clairement les priorités |
+
+## Scrum Master
+
+Le **Scrum Master** est responsable de l'efficacité de la Scrum Team et de la mise en place de Scrum.
+
+### Services au Product Owner
+
+<Steps>
+  <Step title="Techniques de gestion de backlog">
+    Aide à trouver des techniques efficaces pour définir l'objectif produit et gérer le backlog.
+  </Step>
+  <Step title="Clarté des items">
+    Aide l'équipe à comprendre pourquoi des items de Product Backlog clairs et concis sont nécessaires.
+  </Step>
+  <Step title="Planification produit">
+    Aide à établir une planification empirique du produit dans un environnement complexe.
+  </Step>
+  <Step title="Collaboration stakeholders">
+    Facilite la collaboration avec les parties prenantes si demandé ou nécessaire.
+  </Step>
+</Steps>
+
+### Services aux Developers
+
+- Coach l'équipe sur l'auto-gestion et la cross-fonctionnalité
+- Aide à se concentrer sur la création d'incréments de haute valeur
+- Élimine les obstacles au progrès de l'équipe
+- S'assure que tous les événements Scrum ont lieu et sont productifs
+
+### Services à l'organisation
+
+```
+┌─────────────────────────────────────────────┐
+│              Scrum Master                    │
+├─────────────────────────────────────────────┤
+│  • Former et coacher sur Scrum             │
+│  • Planifier les implémentations Scrum     │
+│  • Aider à comprendre l'empirisme          │
+│  • Éliminer les barrières organisation     │
+└─────────────────────────────────────────────┘
+```
+
+## Developers
+
+Les **Developers** sont les personnes de l'équipe qui s'engagent à créer un incrément utilisable à chaque Sprint.
+
+### Responsabilités
+
+<CardGrid columns={2}>
+  <Card title="Sprint Planning" icon="file">
+    Créer le Sprint Backlog et définir le Sprint Goal
+  </Card>
+  <Card title="Qualité" icon="check">
+    Assurer la qualité en adhérant à la Definition of Done
+  </Card>
+  <Card title="Adaptation" icon="refresh-cw">
+    Adapter le plan quotidien vers le Sprint Goal
+  </Card>
+  <Card title="Accountability" icon="target">
+    Se responsabiliser mutuellement en tant que professionnels
+  </Card>
+</CardGrid>
+
+### Compétences de l'équipe
+
+<Callout type="warning">
+  L'équipe doit posséder toutes les compétences nécessaires pour créer un incrément de produit. Elle est cross-fonctionnelle par nature.
+</Callout>
+
+| Domaine | Exemples de compétences |
+|---------|------------------------|
+| **Technique** | Développement, Tests, DevOps |
+| **Design** | UX/UI, Architecture |
+| **Métier** | Analyse, Documentation |
+| **Soft skills** | Communication, Collaboration |
+
+## Taille de l'équipe
+
+La taille optimale d'une Scrum Team est la suivante :
+
+- **Minimum** : 3 Developers
+- **Maximum** : 9 Developers
+- **Optimal** : 5-7 Developers
+
+<Callout type="tip">
+  Si l'équipe devient trop grande, envisagez de la réorganiser en plusieurs Scrum Teams cohérentes.
+</Callout>
+
+## Anti-patterns à éviter
+
+| Anti-pattern | Problème | Solution |
+|--------------|----------|----------|
+| PO absent | Décisions retardées | PO disponible et engagé |
+| SM autoritaire | Équipe non autonome | Facilitation, pas direction |
+| Équipe silotée | Dépendances externes | Cross-fonctionnalité |
+| Pas de DoD | Qualité variable | Definition of Done claire |
+
+---
+
+<DocNavigation
+  prev={{ title: "Scrum en Pratique", href: "/docs/gestion-projet-agile/scrum-pratique" }}
+  next={{ title: "Événements Scrum", href: "/docs/gestion-projet-agile/scrum-pratique/evenements" }}
+/>

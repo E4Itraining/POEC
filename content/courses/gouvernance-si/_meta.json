@@ -1,0 +1,27 @@
+{
+  "index": "Introduction",
+  "introduction": {
+    "title": "Fondamentaux",
+    "items": {
+      "concepts-cles": "Concepts clés",
+      "enjeux-strategiques": "Enjeux stratégiques",
+      "cadres-reference": "Cadres de référence"
+    }
+  },
+  "mise-en-oeuvre": {
+    "title": "Mise en œuvre",
+    "items": {
+      "cobit": "Framework COBIT",
+      "itil": "ITIL v4",
+      "iso-27001": "ISO 27001"
+    }
+  },
+  "outils-bonnes-pratiques": {
+    "title": "Outils & Bonnes pratiques",
+    "items": {
+      "outils-gouvernance": "Outils de gouvernance",
+      "kpi-indicateurs": "KPIs et indicateurs",
+      "cas-pratiques": "Cas pratiques"
+    }
+  }
+}

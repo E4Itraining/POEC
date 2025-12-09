@@ -1,0 +1,20 @@
+{
+  "index": {
+    "title": "Introduction",
+    "description": "Bienvenue sur la plateforme de cours"
+  },
+  "getting-started": {
+    "title": "Premiers pas",
+    "description": "Guide de démarrage rapide"
+  },
+  "gouvernance-si": {
+    "title": "Gouvernance des SI",
+    "description": "Gouvernance des Systèmes d'Information",
+    "icon": "building"
+  },
+  "gestion-projet-agile": {
+    "title": "Gestion de Projet Agile",
+    "description": "Méthodologies agiles et Scrum",
+    "icon": "zap"
+  }
+}
