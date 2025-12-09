@@ -6,6 +6,8 @@ generator client {
 }
 
 datasource db {
+  // Supporte SQLite (dev) et PostgreSQL (prod)
+  // Pour PostgreSQL: provider = "postgresql"
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
@@ -28,6 +30,11 @@ model User {
   lastLoginAt   DateTime?
   isActive      Boolean   @default(true)
 
+  // 2FA Fields
+  twoFactorEnabled  Boolean   @default(false)
+  twoFactorSecret   String?
+  twoFactorBackupCodes String? // JSON array of backup codes
+
   // Relations
   enrollments       Enrollment[]
   courseProgress    CourseProgress[]
@@ -41,6 +48,10 @@ model User {
   forumComments     ForumComment[]
   notes             Note[]
   bookmarks         Bookmark[]
+  auditLogs         AuditLog[]
+  forumVotes        ForumVote[]
+  sessions          UserSession[]
+  preferences       UserPreference?
 
   @@index([email])
   @@index([role])
@@ -320,14 +331,17 @@ model UserBadge {
 // ============================================
 
 model ForumPost {
-  id        String   @id @default(cuid())
-  title     String
-  content   String
-  isPinned  Boolean  @default(false)
-  isLocked  Boolean  @default(false)
-  views     Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              String   @id @default(cuid())
+  title           String
+  content         String
+  isPinned        Boolean  @default(false)
+  isLocked        Boolean  @default(false)
+  isSolved        Boolean  @default(false)
+  views           Int      @default(0)
+  voteScore       Int      @default(0)
+  acceptedAnswerId String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   // Relations
   authorId  String
@@ -335,16 +349,22 @@ model ForumPost {
   courseId  String
   course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
   comments  ForumComment[]
+  votes     ForumVote[]
+  tags      ForumPostTag[]
 
   @@index([authorId])
   @@index([courseId])
+  @@index([voteScore])
+  @@index([isSolved])
 }
 
 model ForumComment {
-  id        String   @id @default(cuid())
-  content   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  content     String
+  isAccepted  Boolean  @default(false)
+  voteScore   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   // Relations
   authorId  String
@@ -354,9 +374,11 @@ model ForumComment {
   parentId  String?
   parent    ForumComment? @relation("CommentReplies", fields: [parentId], references: [id])
   replies   ForumComment[] @relation("CommentReplies")
+  votes     ForumVote[]
 
   @@index([authorId])
   @@index([postId])
+  @@index([voteScore])
 }
 
 // ============================================
@@ -434,3 +456,202 @@ model Notification {
 }
 
 // NotificationType values: INFO, SUCCESS, WARNING, ACHIEVEMENT, COURSE_UPDATE, REMINDER
+
+// ============================================
+// SÉCURITÉ ET AUDIT
+// ============================================
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  action      String   // LOGIN, LOGOUT, CREATE, UPDATE, DELETE, EXPORT, etc.
+  entityType  String   // USER, COURSE, ENROLLMENT, etc.
+  entityId    String?
+  details     String?  // JSON avec détails supplémentaires
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+
+  // Relations
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([action])
+  @@index([entityType])
+  @@index([createdAt])
+}
+
+model UserSession {
+  id          String   @id @default(cuid())
+  token       String   @unique
+  ipAddress   String?
+  userAgent   String?
+  isValid     Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime
+  lastUsedAt  DateTime @default(now())
+
+  // Relations
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+  @@index([expiresAt])
+}
+
+model RateLimitAttempt {
+  id          String   @id @default(cuid())
+  identifier  String   // IP address or user ID
+  endpoint    String   // API endpoint
+  attempts    Int      @default(1)
+  firstAttempt DateTime @default(now())
+  lastAttempt DateTime @default(now())
+  blocked     Boolean  @default(false)
+  blockedUntil DateTime?
+
+  @@unique([identifier, endpoint])
+  @@index([identifier])
+  @@index([blocked])
+}
+
+// ============================================
+// PRÉFÉRENCES UTILISATEUR
+// ============================================
+
+model UserPreference {
+  id                    String   @id @default(cuid())
+  theme                 String   @default("system") // light, dark, system
+  language              String   @default("fr")
+  emailNotifications    Boolean  @default(true)
+  pushNotifications     Boolean  @default(false)
+  weeklyDigest          Boolean  @default(true)
+  courseReminders       Boolean  @default(true)
+  marketingEmails       Boolean  @default(false)
+  updatedAt             DateTime @updatedAt
+
+  // Relations
+  userId                String   @unique
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ============================================
+// FORUM AMÉLIORÉ (Q&A Style)
+// ============================================
+
+model ForumVote {
+  id        String   @id @default(cuid())
+  value     Int      // 1 for upvote, -1 for downvote
+  createdAt DateTime @default(now())
+
+  // Relations
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId    String?
+  post      ForumPost? @relation(fields: [postId], references: [id], onDelete: Cascade)
+  commentId String?
+  comment   ForumComment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+  @@unique([userId, commentId])
+  @@index([postId])
+  @@index([commentId])
+}
+
+model ForumTag {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  color       String   @default("#6366f1")
+  usageCount  Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  // Relations
+  posts       ForumPostTag[]
+
+  @@index([slug])
+}
+
+model ForumPostTag {
+  id        String   @id @default(cuid())
+
+  // Relations
+  postId    String
+  post      ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tagId     String
+  tag       ForumTag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, tagId])
+}
+
+// ============================================
+// RECOMMANDATIONS ET PARCOURS ADAPTATIFS
+// ============================================
+
+model LearnerProfile {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  skillLevel      String   @default("BEGINNER") // BEGINNER, INTERMEDIATE, ADVANCED, EXPERT
+  learningStyle   String?  // VISUAL, AUDITORY, READING, KINESTHETIC
+  preferredPace   String   @default("NORMAL") // SLOW, NORMAL, FAST
+  goals           String?  // JSON array of learning goals
+  interests       String?  // JSON array of topic interests
+  weeklyTimeGoal  Int      @default(5) // hours per week
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Recommendation {
+  id            String   @id @default(cuid())
+  userId        String
+  courseId      String
+  score         Float    // Relevance score 0-1
+  reason        String   // JSON with explanation
+  isViewed      Boolean  @default(false)
+  isClicked     Boolean  @default(false)
+  isDismissed   Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  expiresAt     DateTime
+
+  @@unique([userId, courseId])
+  @@index([userId])
+  @@index([score])
+}
+
+// ============================================
+// ANALYTICS ET REPORTING
+// ============================================
+
+model AnalyticsEvent {
+  id          String   @id @default(cuid())
+  eventType   String   // PAGE_VIEW, COURSE_START, LESSON_COMPLETE, QUIZ_SUBMIT, etc.
+  userId      String?
+  sessionId   String?
+  courseId    String?
+  lessonId    String?
+  metadata    String?  // JSON with additional data
+  createdAt   DateTime @default(now())
+
+  @@index([eventType])
+  @@index([userId])
+  @@index([courseId])
+  @@index([createdAt])
+}
+
+model DailyStats {
+  id              String   @id @default(cuid())
+  date            DateTime @unique
+  activeUsers     Int      @default(0)
+  newUsers        Int      @default(0)
+  newEnrollments  Int      @default(0)
+  completedLessons Int     @default(0)
+  completedCourses Int     @default(0)
+  quizAttempts    Int      @default(0)
+  avgQuizScore    Float    @default(0)
+  totalTimeSpent  Int      @default(0) // minutes
+
+  @@index([date])
+}
