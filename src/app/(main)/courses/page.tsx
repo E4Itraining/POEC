@@ -3,17 +3,12 @@ import { prisma } from '@/lib/prisma'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { BookOpen, Clock, Users, Search, Filter, Star, GraduationCap } from 'lucide-react'
+import { CourseListSkeleton } from '@/components/ui/skeleton'
+import { HighlightText } from '@/components/ui/search-input'
+import { BookOpen, Clock, Users, Star, GraduationCap } from 'lucide-react'
 import Link from 'next/link'
 import { formatDuration, getLevelLabel, getLevelColor } from '@/lib/utils'
+import { CoursesSearchFilter } from './courses-search-filter'
 
 export const metadata = {
   title: 'Catalogue des cours',
@@ -101,63 +96,9 @@ export default async function CoursesPage({ searchParams }: CoursesPageProps) {
         </p>
       </section>
 
-      {/* Filtres */}
+      {/* Filtres avec recherche améliorée */}
       <section className="mb-8" aria-label="Filtres de recherche">
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
-                <Input
-                  type="search"
-                  placeholder="Rechercher un cours..."
-                  className="pl-9"
-                  defaultValue={searchParams.search}
-                  aria-label="Rechercher un cours"
-                />
-              </div>
-
-              <Select defaultValue={searchParams.category || 'all'}>
-                <SelectTrigger className="w-full md:w-48" aria-label="Filtrer par catégorie">
-                  <SelectValue placeholder="Catégorie" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Toutes les catégories</SelectItem>
-                  {categories.map((cat) => (
-                    <SelectItem key={cat.category} value={cat.category}>
-                      {cat.category} ({cat._count})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select defaultValue={searchParams.level || 'all'}>
-                <SelectTrigger className="w-full md:w-40" aria-label="Filtrer par niveau">
-                  <SelectValue placeholder="Niveau" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Tous niveaux</SelectItem>
-                  <SelectItem value="BEGINNER">Débutant</SelectItem>
-                  <SelectItem value="INTERMEDIATE">Intermédiaire</SelectItem>
-                  <SelectItem value="ADVANCED">Avancé</SelectItem>
-                  <SelectItem value="EXPERT">Expert</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Select defaultValue={searchParams.sort || 'featured'}>
-                <SelectTrigger className="w-full md:w-40" aria-label="Trier par">
-                  <SelectValue placeholder="Trier par" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="featured">Mis en avant</SelectItem>
-                  <SelectItem value="newest">Plus récents</SelectItem>
-                  <SelectItem value="popular">Populaires</SelectItem>
-                  <SelectItem value="duration">Durée</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </CardContent>
-        </Card>
+        <CoursesSearchFilter categories={categories} />
       </section>
 
       {/* Liste des cours */}
