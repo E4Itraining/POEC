@@ -9,18 +9,18 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: {
-    default: 'LearnHub - Learning Platform',
-    template: '%s | LearnHub',
+    default: 'Erythix Campus - Formation DevOps & Infrastructure',
+    template: '%s | Erythix Campus',
   },
-  description: 'Complete, scalable and accessible online learning platform',
-  keywords: ['LMS', 'training', 'e-learning', 'online courses', 'learning', 'formation'],
-  authors: [{ name: 'LearnHub' }],
-  creator: 'LearnHub',
+  description: 'L\'expertise terrain, pas le buzzword. Formations observabilité, HPC et infrastructures souveraines.',
+  keywords: ['formation', 'DevOps', 'observabilité', 'HPC', 'infrastructure', 'VictoriaMetrics', 'Rocky Linux', 'open-source'],
+  authors: [{ name: 'Erythix' }],
+  creator: 'Erythix',
   openGraph: {
     type: 'website',
     locale: 'fr_FR',
     alternateLocale: 'en_US',
-    siteName: 'LearnHub',
+    siteName: 'Erythix Campus',
   },
 }
 
