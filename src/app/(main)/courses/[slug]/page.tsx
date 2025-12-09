@@ -22,9 +22,11 @@ import {
   Award,
   BarChart,
   Lock,
+  Terminal,
 } from 'lucide-react'
 import { formatDuration, getLevelLabel, getLevelColor, getInitials } from '@/lib/utils'
 import { EnrollButton } from '@/components/courses/enroll-button'
+import { CourseContentOrganizer } from '@/components/courses/course-content-organizer'
 
 interface CoursePageProps {
   params: { slug: string }
@@ -51,6 +53,15 @@ async function getCourse(slug: string) {
             include: {
               quiz: {
                 select: { id: true },
+              },
+              labAssignments: {
+                select: {
+                  id: true,
+                  title: true,
+                  difficulty: true,
+                  estimatedTime: true,
+                  points: true,
+                },
               },
             },
           },
@@ -96,6 +107,14 @@ export default async function CoursePage({ params }: CoursePageProps) {
   const totalLessons = course.modules.reduce((acc, m) => acc + m.lessons.length, 0)
   const totalQuizzes = course.modules.reduce(
     (acc, m) => acc + m.lessons.filter((l) => l.quiz).length,
+    0
+  )
+  const totalLabs = course.modules.reduce(
+    (acc, m) => acc + m.lessons.reduce((lacc, l) => lacc + (l.labAssignments?.length || 0), 0),
+    0
+  )
+  const totalVideos = course.modules.reduce(
+    (acc, m) => acc + m.lessons.filter((l) => l.type === 'VIDEO').length,
     0
   )
 
@@ -155,6 +174,18 @@ export default async function CoursePage({ params }: CoursePageProps) {
                 <BookOpen className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
                 <span>{totalLessons} leçons</span>
               </span>
+              {totalVideos > 0 && (
+                <span className="flex items-center gap-2">
+                  <Video className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                  <span>{totalVideos} vidéos</span>
+                </span>
+              )}
+              {totalLabs > 0 && (
+                <span className="flex items-center gap-2">
+                  <Terminal className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                  <span>{totalLabs} labs</span>
+                </span>
+              )}
               <span className="flex items-center gap-2">
                 <HelpCircle className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
                 <span>{totalQuizzes} quiz</span>
@@ -174,12 +205,22 @@ export default async function CoursePage({ params }: CoursePageProps) {
           </section>
 
           {/* Onglets */}
-          <Tabs defaultValue="curriculum" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-3">
+          <Tabs defaultValue="organized" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-4">
+              <TabsTrigger value="organized">Contenu</TabsTrigger>
               <TabsTrigger value="curriculum">Programme</TabsTrigger>
               <TabsTrigger value="description">Description</TabsTrigger>
               <TabsTrigger value="instructor">Formateur</TabsTrigger>
             </TabsList>
+
+            {/* Contenu organisé par type */}
+            <TabsContent value="organized" className="space-y-4">
+              <CourseContentOrganizer
+                modules={course.modules}
+                courseSlug={course.slug}
+                isEnrolled={!!enrollment}
+              />
+            </TabsContent>
 
             {/* Programme du cours */}
             <TabsContent value="curriculum" className="space-y-4">
@@ -215,13 +256,18 @@ export default async function CoursePage({ params }: CoursePageProps) {
                                 className="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-accent/50"
                               >
                                 {lesson.type === 'VIDEO' ? (
-                                  <Video className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                                  <Video className="h-4 w-4 text-blue-500" aria-hidden="true" />
                                 ) : lesson.type === 'QUIZ' ? (
-                                  <HelpCircle className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                                  <HelpCircle className="h-4 w-4 text-orange-500" aria-hidden="true" />
+                                ) : lesson.type === 'ASSIGNMENT' || (lesson.labAssignments && lesson.labAssignments.length > 0) ? (
+                                  <Terminal className="h-4 w-4 text-pink-500" aria-hidden="true" />
                                 ) : (
-                                  <FileText className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                                  <FileText className="h-4 w-4 text-purple-500" aria-hidden="true" />
                                 )}
                                 <span className="flex-1">{lesson.title}</span>
+                                {lesson.labAssignments && lesson.labAssignments.length > 0 && (
+                                  <Badge variant="secondary" className="text-xs">Lab</Badge>
+                                )}
                                 <span className="text-sm text-muted-foreground">
                                   {formatDuration(lesson.duration)}
                                 </span>
@@ -356,23 +402,35 @@ export default async function CoursePage({ params }: CoursePageProps) {
                 <h4 className="font-medium">Ce cours inclut :</h4>
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-center gap-2">
-                    <Video className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                    <Clock className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
                     {formatDuration(course.duration)} de contenu
                   </li>
                   <li className="flex items-center gap-2">
-                    <FileText className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                    <FileText className="h-4 w-4 text-purple-500" aria-hidden="true" />
                     {totalLessons} leçons
                   </li>
+                  {totalVideos > 0 && (
+                    <li className="flex items-center gap-2">
+                      <Video className="h-4 w-4 text-blue-500" aria-hidden="true" />
+                      {totalVideos} vidéos
+                    </li>
+                  )}
+                  {totalLabs > 0 && (
+                    <li className="flex items-center gap-2">
+                      <Terminal className="h-4 w-4 text-pink-500" aria-hidden="true" />
+                      {totalLabs} labs pratiques
+                    </li>
+                  )}
                   <li className="flex items-center gap-2">
-                    <HelpCircle className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                    <HelpCircle className="h-4 w-4 text-orange-500" aria-hidden="true" />
                     {totalQuizzes} quiz d'évaluation
                   </li>
                   <li className="flex items-center gap-2">
-                    <Award className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                    <Award className="h-4 w-4 text-yellow-500" aria-hidden="true" />
                     Certificat de réussite
                   </li>
                   <li className="flex items-center gap-2">
-                    <BarChart className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                    <BarChart className="h-4 w-4 text-green-500" aria-hidden="true" />
                     Suivi de progression
                   </li>
                 </ul>

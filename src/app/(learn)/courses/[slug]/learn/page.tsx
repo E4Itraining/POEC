@@ -44,6 +44,18 @@ async function getCourseWithProgress(slug: string, userId: string) {
               lessonProgress: {
                 where: { userId },
               },
+              labAssignments: {
+                select: {
+                  id: true,
+                  title: true,
+                  description: true,
+                  instructions: true,
+                  difficulty: true,
+                  estimatedTime: true,
+                  points: true,
+                  startingCode: true,
+                },
+              },
             },
           },
         },

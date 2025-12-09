@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcryptjs'
+import { courseStructures, createQuizQuestions } from './seed-courses'
 
 const prisma = new PrismaClient()
 
@@ -46,6 +47,37 @@ async function main() {
       lastName: 'Martin',
       role: 'LEARNER',
       bio: 'Passionné par les nouvelles technologies',
+    },
+  })
+
+  // Créer un environnement de lab par défaut
+  const defaultLabEnv = await prisma.labEnvironment.upsert({
+    where: { id: 'default-container-env' },
+    update: {},
+    create: {
+      id: 'default-container-env',
+      name: 'Conteneur Linux',
+      description: 'Environnement Linux standard pour les exercices',
+      type: 'CONTAINER',
+      dockerImage: 'ubuntu:22.04',
+      resourceLimits: JSON.stringify({ cpu: '1', memory: '2Gi', storage: '10Gi' }),
+      timeout: 3600,
+      isActive: true,
+    },
+  })
+
+  const jupyterLabEnv = await prisma.labEnvironment.upsert({
+    where: { id: 'jupyter-notebook-env' },
+    update: {},
+    create: {
+      id: 'jupyter-notebook-env',
+      name: 'Jupyter Notebook',
+      description: 'Environnement Jupyter pour l\'analyse de données',
+      type: 'JUPYTER',
+      dockerImage: 'jupyter/datascience-notebook:latest',
+      resourceLimits: JSON.stringify({ cpu: '2', memory: '4Gi', storage: '20Gi' }),
+      timeout: 7200,
+      isActive: true,
     },
   })
 
@@ -113,7 +145,7 @@ async function main() {
     }),
   ])
 
-  // Créer les cours
+  // Créer les cours avec la structure enrichie
   const course1 = await prisma.course.upsert({
     where: { slug: 'gouvernance-si' },
     update: {},
@@ -143,7 +175,7 @@ async function main() {
       description: 'Découvrez les méthodologies agiles (Scrum, Kanban, SAFe) et apprenez à les implémenter efficacement dans vos projets. Des exercices pratiques et des études de cas réels vous permettront de maîtriser ces approches modernes.',
       shortDescription: 'Maîtrisez Scrum, Kanban et SAFe',
       thumbnail: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=800',
-      duration: 360,
+      duration: 420,
       level: 'BEGINNER',
       category: 'Gestion de Projet',
       tags: JSON.stringify(['Agile', 'Scrum', 'Kanban', 'SAFe']),
@@ -173,233 +205,198 @@ async function main() {
     },
   })
 
-  // Créer les modules et leçons pour le cours 1
-  const module1 = await prisma.module.create({
-    data: {
-      title: 'Introduction à la Gouvernance IT',
-      description: 'Comprendre les enjeux et les fondamentaux de la gouvernance des SI',
-      order: 1,
-      courseId: course1.id,
-    },
-  })
+  // Créer le contenu pour le cours 1 (Gouvernance SI)
+  const govStructure = courseStructures['gouvernance-si']
+  let firstLesson1: { id: string } | null = null
 
-  const lesson1_1 = await prisma.lesson.create({
-    data: {
-      title: 'Qu\'est-ce que la Gouvernance IT ?',
-      description: 'Définition, enjeux et importance de la gouvernance IT',
-      content: `
-# Qu'est-ce que la Gouvernance IT ?
-
-La gouvernance IT est l'ensemble des processus et pratiques qui assurent que les systèmes d'information soutiennent les objectifs stratégiques de l'organisation.
-
-## Les piliers de la gouvernance IT
-
-1. **Alignement stratégique** - S'assurer que l'IT soutient les objectifs métier
-2. **Création de valeur** - Optimiser les investissements IT
-3. **Gestion des risques** - Identifier et mitiger les risques technologiques
-4. **Gestion des ressources** - Optimiser l'utilisation des ressources IT
-5. **Mesure de la performance** - Suivre et améliorer les performances
-
-## Pourquoi est-ce important ?
-
-- Meilleure prise de décision
-- Réduction des coûts
-- Amélioration de la qualité des services
-- Conformité réglementaire
-- Avantage compétitif
-
-> "La gouvernance IT n'est pas une option, c'est une nécessité pour toute organisation moderne." - ISACA
-      `,
-      duration: 15,
-      order: 1,
-      type: 'TEXT',
-      isPreview: true,
-      moduleId: module1.id,
-    },
-  })
-
-  const lesson1_2 = await prisma.lesson.create({
-    data: {
-      title: 'Les frameworks de référence',
-      description: 'COBIT, ITIL, ISO 38500 - Vue d\'ensemble',
-      content: `
-# Les Frameworks de Gouvernance IT
-
-## COBIT (Control Objectives for Information Technologies)
-
-COBIT est un framework de gouvernance IT développé par l'ISACA. Il fournit :
-- Des processus de gouvernance clairement définis
-- Des métriques et modèles de maturité
-- Des bonnes pratiques reconnues mondialement
-
-### Les 5 domaines de COBIT
-
-1. Évaluer, Diriger et Surveiller (EDM)
-2. Aligner, Planifier et Organiser (APO)
-3. Construire, Acquérir et Implémenter (BAI)
-4. Délivrer, Servir et Supporter (DSS)
-5. Surveiller, Évaluer et Apprécier (MEA)
-
-## ITIL (Information Technology Infrastructure Library)
-
-ITIL est un ensemble de bonnes pratiques pour la gestion des services IT.
-
-### Le cycle de vie des services ITIL
-
-- Stratégie des services
-- Conception des services
-- Transition des services
-- Exploitation des services
-- Amélioration continue des services
-
-## ISO/IEC 38500
-
-Norme internationale pour la gouvernance IT des organisations.
-      `,
-      duration: 20,
-      order: 2,
-      type: 'TEXT',
-      moduleId: module1.id,
-    },
-  })
-
-  // Créer un quiz pour la première leçon
-  const quiz1 = await prisma.quiz.create({
-    data: {
-      title: 'Quiz : Fondamentaux de la Gouvernance IT',
-      description: 'Testez vos connaissances sur les bases de la gouvernance IT',
-      passingScore: 70,
-      timeLimit: 10,
-      maxAttempts: 3,
-      lessonId: lesson1_2.id,
-    },
-  })
-
-  // Créer les questions du quiz
-  const question1 = await prisma.question.create({
-    data: {
-      text: 'Quels sont les piliers de la gouvernance IT ?',
-      type: 'MULTIPLE_CHOICE',
-      explanation: 'Les 5 piliers sont : alignement stratégique, création de valeur, gestion des risques, gestion des ressources et mesure de la performance.',
-      points: 2,
-      order: 1,
-      quizId: quiz1.id,
-    },
-  })
-
-  await prisma.answer.createMany({
-    data: [
-      { text: 'Alignement stratégique', isCorrect: true, order: 1, questionId: question1.id },
-      { text: 'Marketing digital', isCorrect: false, order: 2, questionId: question1.id },
-      { text: 'Gestion des risques', isCorrect: true, order: 3, questionId: question1.id },
-      { text: 'Mesure de la performance', isCorrect: true, order: 4, questionId: question1.id },
-    ],
-  })
-
-  const question2 = await prisma.question.create({
-    data: {
-      text: 'COBIT est développé par quelle organisation ?',
-      type: 'SINGLE_CHOICE',
-      explanation: 'COBIT est développé et maintenu par l\'ISACA (Information Systems Audit and Control Association).',
-      points: 1,
-      order: 2,
-      quizId: quiz1.id,
-    },
-  })
-
-  await prisma.answer.createMany({
-    data: [
-      { text: 'ISO', isCorrect: false, order: 1, questionId: question2.id },
-      { text: 'ISACA', isCorrect: true, order: 2, questionId: question2.id },
-      { text: 'PMI', isCorrect: false, order: 3, questionId: question2.id },
-      { text: 'IEEE', isCorrect: false, order: 4, questionId: question2.id },
-    ],
-  })
-
-  const question3 = await prisma.question.create({
-    data: {
-      text: 'ITIL se concentre principalement sur la gestion des services IT.',
-      type: 'TRUE_FALSE',
-      explanation: 'Vrai. ITIL (Information Technology Infrastructure Library) est un ensemble de bonnes pratiques spécifiquement conçu pour la gestion des services IT.',
-      points: 1,
-      order: 3,
-      quizId: quiz1.id,
-    },
-  })
-
-  await prisma.answer.createMany({
-    data: [
-      { text: 'Vrai', isCorrect: true, order: 1, questionId: question3.id },
-      { text: 'Faux', isCorrect: false, order: 2, questionId: question3.id },
-    ],
-  })
-
-  // Module 2
-  const module2 = await prisma.module.create({
-    data: {
-      title: 'Mise en œuvre de la Gouvernance',
-      description: 'Stratégies et étapes pour implémenter une gouvernance IT efficace',
-      order: 2,
-      courseId: course1.id,
-    },
-  })
-
-  await prisma.lesson.createMany({
-    data: [
-      {
-        title: 'Évaluation de la maturité',
-        description: 'Comment évaluer le niveau de maturité de votre gouvernance IT',
-        content: `# Évaluation de la maturité IT\n\nL'évaluation de la maturité permet de comprendre où se situe votre organisation...`,
-        duration: 25,
-        order: 1,
-        type: 'TEXT',
-        moduleId: module2.id,
+  for (const moduleData of govStructure.modules) {
+    const module = await prisma.module.create({
+      data: {
+        title: moduleData.title,
+        description: moduleData.description,
+        order: moduleData.order,
+        courseId: course1.id,
       },
-      {
-        title: 'Plan de mise en œuvre',
-        description: 'Élaborer un plan d\'action concret',
-        content: `# Plan de mise en œuvre\n\n## Étapes clés\n\n1. Diagnostic initial\n2. Définition des objectifs\n3. Choix du framework...`,
-        duration: 30,
-        order: 2,
-        type: 'TEXT',
-        moduleId: module2.id,
-      },
-    ],
-  })
+    })
 
-  // Créer des modules pour le cours 2
-  const module3 = await prisma.module.create({
-    data: {
-      title: 'Introduction à l\'Agilité',
-      description: 'Découvrir les principes fondamentaux des méthodes agiles',
-      order: 1,
-      courseId: course2.id,
-    },
-  })
+    for (const lessonData of moduleData.lessons) {
+      const lesson = await prisma.lesson.create({
+        data: {
+          title: lessonData.title,
+          description: lessonData.description,
+          content: lessonData.content,
+          videoUrl: (lessonData as { videoUrl?: string }).videoUrl || null,
+          duration: lessonData.duration,
+          order: lessonData.order,
+          type: lessonData.type,
+          isPreview: (lessonData as { isPreview?: boolean }).isPreview || false,
+          resources: (lessonData as { resources?: string }).resources || null,
+          moduleId: module.id,
+        },
+      })
 
-  await prisma.lesson.createMany({
-    data: [
-      {
-        title: 'Le Manifeste Agile',
-        description: 'Les 4 valeurs et 12 principes de l\'agilité',
-        content: `# Le Manifeste Agile\n\n## Les 4 valeurs\n\n1. Les individus et leurs interactions plus que les processus et les outils\n2. Des logiciels opérationnels plus qu'une documentation exhaustive\n3. La collaboration avec les clients plus que la négociation contractuelle\n4. L'adaptation au changement plus que le suivi d'un plan`,
-        duration: 20,
-        order: 1,
-        type: 'TEXT',
-        isPreview: true,
-        moduleId: module3.id,
+      if (!firstLesson1) firstLesson1 = lesson
+
+      // Créer le quiz si nécessaire
+      if ((lessonData as { hasQuiz?: boolean }).hasQuiz) {
+        const quizData = createQuizQuestions(lessonData.title)
+        if (quizData) {
+          const quiz = await prisma.quiz.create({
+            data: {
+              title: lessonData.title,
+              description: lessonData.description,
+              passingScore: 70,
+              timeLimit: lessonData.duration,
+              maxAttempts: 3,
+              lessonId: lesson.id,
+            },
+          })
+
+          let questionOrder = 1
+          for (const q of quizData.questions) {
+            const question = await prisma.question.create({
+              data: {
+                text: q.text,
+                type: q.type,
+                explanation: q.explanation,
+                points: q.points,
+                order: questionOrder++,
+                quizId: quiz.id,
+              },
+            })
+
+            let answerOrder = 1
+            for (const a of q.answers) {
+              await prisma.answer.create({
+                data: {
+                  text: a.text,
+                  isCorrect: a.isCorrect,
+                  order: answerOrder++,
+                  questionId: question.id,
+                },
+              })
+            }
+          }
+        }
+      }
+
+      // Créer le lab si nécessaire
+      if ((lessonData as { hasLab?: boolean; labConfig?: { title: string; description: string; instructions: string; difficulty: string; estimatedTime: number; points: number; startingCode?: string } }).hasLab) {
+        const labConfig = (lessonData as { labConfig: { title: string; description: string; instructions: string; difficulty: string; estimatedTime: number; points: number; startingCode?: string } }).labConfig
+        await prisma.labAssignment.create({
+          data: {
+            title: labConfig.title,
+            description: labConfig.description,
+            instructions: labConfig.instructions,
+            difficulty: labConfig.difficulty,
+            estimatedTime: labConfig.estimatedTime,
+            points: labConfig.points,
+            startingCode: labConfig.startingCode || null,
+            lessonId: lesson.id,
+            environmentId: defaultLabEnv.id,
+          },
+        })
+      }
+    }
+  }
+
+  // Créer le contenu pour le cours 2 (Gestion de Projet Agile)
+  const agileStructure = courseStructures['gestion-projet-agile']
+  let firstLesson2: { id: string } | null = null
+
+  for (const moduleData of agileStructure.modules) {
+    const module = await prisma.module.create({
+      data: {
+        title: moduleData.title,
+        description: moduleData.description,
+        order: moduleData.order,
+        courseId: course2.id,
       },
-      {
-        title: 'Scrum en pratique',
-        description: 'Les rôles, événements et artefacts Scrum',
-        content: `# Scrum en pratique\n\n## Les 3 rôles\n\n- Product Owner\n- Scrum Master\n- Équipe de développement\n\n## Les événements\n\n- Sprint Planning\n- Daily Scrum\n- Sprint Review\n- Sprint Retrospective`,
-        duration: 35,
-        order: 2,
-        type: 'TEXT',
-        moduleId: module3.id,
-      },
-    ],
-  })
+    })
+
+    for (const lessonData of moduleData.lessons) {
+      const lesson = await prisma.lesson.create({
+        data: {
+          title: lessonData.title,
+          description: lessonData.description,
+          content: lessonData.content,
+          videoUrl: (lessonData as { videoUrl?: string }).videoUrl || null,
+          duration: lessonData.duration,
+          order: lessonData.order,
+          type: lessonData.type,
+          isPreview: (lessonData as { isPreview?: boolean }).isPreview || false,
+          resources: (lessonData as { resources?: string }).resources || null,
+          moduleId: module.id,
+        },
+      })
+
+      if (!firstLesson2) firstLesson2 = lesson
+
+      // Créer le quiz si nécessaire
+      if ((lessonData as { hasQuiz?: boolean }).hasQuiz) {
+        const quizData = createQuizQuestions(lessonData.title)
+        if (quizData) {
+          const quiz = await prisma.quiz.create({
+            data: {
+              title: lessonData.title,
+              description: lessonData.description,
+              passingScore: 70,
+              timeLimit: lessonData.duration,
+              maxAttempts: 3,
+              lessonId: lesson.id,
+            },
+          })
+
+          let questionOrder = 1
+          for (const q of quizData.questions) {
+            const question = await prisma.question.create({
+              data: {
+                text: q.text,
+                type: q.type,
+                explanation: q.explanation,
+                points: q.points,
+                order: questionOrder++,
+                quizId: quiz.id,
+              },
+            })
+
+            let answerOrder = 1
+            for (const a of q.answers) {
+              await prisma.answer.create({
+                data: {
+                  text: a.text,
+                  isCorrect: a.isCorrect,
+                  order: answerOrder++,
+                  questionId: question.id,
+                },
+              })
+            }
+          }
+        }
+      }
+
+      // Créer le lab si nécessaire
+      if ((lessonData as { hasLab?: boolean; labConfig?: { title: string; description: string; instructions: string; difficulty: string; estimatedTime: number; points: number; startingCode?: string } }).hasLab) {
+        const labConfig = (lessonData as { labConfig: { title: string; description: string; instructions: string; difficulty: string; estimatedTime: number; points: number; startingCode?: string } }).labConfig
+        await prisma.labAssignment.create({
+          data: {
+            title: labConfig.title,
+            description: labConfig.description,
+            instructions: labConfig.instructions,
+            difficulty: labConfig.difficulty,
+            estimatedTime: labConfig.estimatedTime,
+            points: labConfig.points,
+            startingCode: labConfig.startingCode || null,
+            lessonId: lesson.id,
+            environmentId: defaultLabEnv.id,
+          },
+        })
+      }
+    }
+  }
+
+  // Garder les références aux premières leçons pour la progression
+  const lesson1_1 = firstLesson1!
 
   // Inscrire l'apprenant aux cours
   await prisma.enrollment.createMany({
