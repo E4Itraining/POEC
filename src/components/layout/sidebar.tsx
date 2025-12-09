@@ -20,6 +20,7 @@ import {
   Bookmark,
   Clock,
   X,
+  GitBranch,
 } from 'lucide-react'
 
 interface SidebarProps {
@@ -38,6 +39,7 @@ const learnerNavigation = [
 
 const instructorNavigation = [
   { name: 'Mes formations', href: '/instructor/courses', icon: BookOpen },
+  { name: 'Contenu GitBook', href: '/instructor/content', icon: GitBranch },
   { name: 'Statistiques', href: '/instructor/analytics', icon: BarChart3 },
   { name: 'Étudiants', href: '/instructor/students', icon: Users },
 ]

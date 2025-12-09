@@ -15,7 +15,7 @@
       { "title": "Dashboard", "href": "/dashboard" }
     ],
     "footer": [
-      { "title": "GitHub", "href": "https://github.com" },
+      { "title": "GitHub", "href": "https://github.com/E4Itraining/ErythixCampus" },
       { "title": "Discord", "href": "https://discord.com" }
     ]
   },
@@ -28,7 +28,13 @@
     "copyCode": true,
     "darkMode": true,
     "tableOfContents": true,
-    "editOnGitHub": false,
+    "editOnGitHub": true,
     "feedback": true
+  },
+  "git": {
+    "repository": "E4Itraining/ErythixCampus",
+    "branch": "main",
+    "contentPath": "content/courses",
+    "editUrl": "https://github.com/E4Itraining/ErythixCampus/edit/main/content/courses"
   }
 }
