@@ -52,6 +52,9 @@ model User {
   forumVotes        ForumVote[]
   sessions          UserSession[]
   preferences       UserPreference?
+  labSubmissions    LabSubmission[]
+  repoSubmissions   RepoSubmission[]
+  oauthConnections  UserOAuthConnection[]
 
   @@index([email])
   @@index([role])
@@ -91,6 +94,7 @@ model Course {
   certificates    Certificate[]
   reviews         Review[]
   forumPosts      ForumPost[]
+  repositories    Repository[]
 
   @@index([slug])
   @@index([category])
@@ -136,6 +140,8 @@ model Lesson {
   quiz            Quiz?
   notes           Note[]
   bookmarks       Bookmark[]
+  labAssignments  LabAssignment[]
+  repoAssignments RepoAssignment[]
 
   @@index([moduleId])
 }
@@ -654,4 +660,191 @@ model DailyStats {
   totalTimeSpent  Int      @default(0) // minutes
 
   @@index([date])
+}
+
+// ============================================
+// LABS ET EXERCICES PRATIQUES
+// ============================================
+
+model LabEnvironment {
+  id              String   @id @default(cuid())
+  name            String
+  description     String?
+  type            String   @default("CONTAINER")  // CONTAINER, VM, KUBERNETES, JUPYTER
+  dockerImage     String?  // Image Docker pour les labs conteneurisés
+  resourceLimits  String?  // JSON: {cpu: "1", memory: "2Gi", storage: "10Gi"}
+  timeout         Int      @default(3600)  // Temps max en secondes (1h par défaut)
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  labAssignments  LabAssignment[]
+}
+
+// LabEnvironmentType values: CONTAINER, VM, KUBERNETES, JUPYTER
+
+model LabAssignment {
+  id              String   @id @default(cuid())
+  title           String
+  description     String
+  instructions    String   // Markdown avec instructions détaillées
+  startingCode    String?  // Code de départ fourni à l'apprenant
+  solutionCode    String?  // Code de solution (pour les instructeurs)
+  testCommand     String?  // Commande pour valider l'exercice
+  testCriteria    String?  // JSON: critères de validation automatique
+  difficulty      String   @default("INTERMEDIATE")  // EASY, INTERMEDIATE, HARD, EXPERT
+  estimatedTime   Int      @default(30)  // Temps estimé en minutes
+  maxAttempts     Int      @default(0)   // 0 = illimité
+  points          Int      @default(100) // Points pour la gamification
+  order           Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  lessonId        String?
+  lesson          Lesson?  @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  environmentId   String?
+  environment     LabEnvironment? @relation(fields: [environmentId], references: [id])
+  submissions     LabSubmission[]
+
+  @@index([lessonId])
+  @@index([environmentId])
+}
+
+// LabDifficulty values: EASY, INTERMEDIATE, HARD, EXPERT
+
+model LabSubmission {
+  id              String   @id @default(cuid())
+  code            String   // Code soumis par l'apprenant
+  output          String?  // Output de l'exécution
+  testResults     String?  // JSON: résultats des tests automatiques
+  score           Float?   // Score obtenu (0-100)
+  isPassed        Boolean  @default(false)
+  executionTime   Int?     // Temps d'exécution en millisecondes
+  feedback        String?  // Feedback automatique ou de l'instructeur
+  status          String   @default("PENDING")  // PENDING, RUNNING, PASSED, FAILED, ERROR
+  attemptNumber   Int      @default(1)
+  submittedAt     DateTime @default(now())
+  completedAt     DateTime?
+
+  // Relations
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  assignmentId    String
+  assignment      LabAssignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([assignmentId])
+  @@index([status])
+}
+
+// LabSubmissionStatus values: PENDING, RUNNING, PASSED, FAILED, ERROR
+
+// ============================================
+// INTÉGRATION REPOSITORIES (GitHub/GitLab)
+// ============================================
+
+model Repository {
+  id              String   @id @default(cuid())
+  name            String
+  fullName        String   // format: owner/repo
+  provider        String   @default("GITHUB")  // GITHUB, GITLAB, BITBUCKET
+  url             String
+  description     String?
+  defaultBranch   String   @default("main")
+  isTemplate      Boolean  @default(false)  // Repository template pour les assignments
+  webhookSecret   String?  // Secret pour les webhooks
+  accessToken     String?  // Token d'accès (chiffré en production)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  courseId        String?
+  course          Course?  @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  assignments     RepoAssignment[]
+
+  @@unique([fullName, provider])
+  @@index([courseId])
+}
+
+// RepositoryProvider values: GITHUB, GITLAB, BITBUCKET
+
+model RepoAssignment {
+  id              String   @id @default(cuid())
+  title           String
+  description     String?
+  instructions    String   // Instructions en Markdown
+  dueDate         DateTime?
+  maxPoints       Int      @default(100)
+  allowLateSubmit Boolean  @default(true)
+  autoGrade       Boolean  @default(false)  // Grading automatique via CI/CD
+  gradingScript   String?  // Script de notation personnalisé
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  lessonId        String?
+  lesson          Lesson?  @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  templateRepoId  String?
+  templateRepo    Repository? @relation(fields: [templateRepoId], references: [id])
+  submissions     RepoSubmission[]
+
+  @@index([lessonId])
+  @@index([templateRepoId])
+}
+
+model RepoSubmission {
+  id              String   @id @default(cuid())
+  repoUrl         String   // URL du repo forké par l'étudiant
+  branch          String   @default("main")
+  commitHash      String?  // Dernier commit évalué
+  pullRequestUrl  String?  // PR si soumission via PR
+  status          String   @default("SUBMITTED")  // SUBMITTED, REVIEWING, GRADED, RETURNED
+  score           Float?   // Note obtenue
+  feedback        String?  // Feedback de l'instructeur
+  autoGradeResult String?  // JSON: résultats du grading automatique
+  gradedAt        DateTime?
+  submittedAt     DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  assignmentId    String
+  assignment      RepoAssignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, assignmentId])
+  @@index([userId])
+  @@index([assignmentId])
+  @@index([status])
+}
+
+// RepoSubmissionStatus values: SUBMITTED, REVIEWING, GRADED, RETURNED
+
+// ============================================
+// CONNEXIONS OAUTH UTILISATEURS (pour GitHub, etc.)
+// ============================================
+
+model UserOAuthConnection {
+  id              String   @id @default(cuid())
+  provider        String   // GITHUB, GITLAB, GOOGLE, etc.
+  providerUserId  String   // ID utilisateur chez le provider
+  accessToken     String   // Token d'accès (chiffré en production)
+  refreshToken    String?  // Token de refresh
+  expiresAt       DateTime?
+  scope           String?  // Permissions accordées
+  username        String?  // Username chez le provider
+  email           String?  // Email chez le provider
+  avatarUrl       String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, provider])
+  @@unique([provider, providerUserId])
+  @@index([userId])
 }
