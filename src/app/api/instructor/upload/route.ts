@@ -133,10 +133,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Erreur lors de l\'upload' }, { status: 500 })
   }
 }
-
-// Configuration pour permettre les gros fichiers
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-}
