@@ -1,17 +1,21 @@
 'use client'
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
-import { translations, Locale, TranslationKeys } from './translations'
+import { translations, Locale, TranslationKeys, localeNames, localeFlags } from './translations'
 
 interface I18nContextType {
   locale: Locale
   setLocale: (locale: Locale) => void
   t: TranslationKeys
+  localeNames: typeof localeNames
+  localeFlags: typeof localeFlags
+  availableLocales: Locale[]
 }
 
 const I18nContext = createContext<I18nContextType | undefined>(undefined)
 
 const LOCALE_KEY = 'lms-locale'
+const AVAILABLE_LOCALES: Locale[] = ['fr', 'en', 'de', 'nl']
 
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>('fr')
@@ -19,14 +23,19 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     // Load saved locale from localStorage
     const savedLocale = localStorage.getItem(LOCALE_KEY) as Locale
-    if (savedLocale && (savedLocale === 'en' || savedLocale === 'fr')) {
+    if (savedLocale && AVAILABLE_LOCALES.includes(savedLocale)) {
       setLocaleState(savedLocale)
     } else {
       // Detect browser language
       const browserLang = navigator.language.toLowerCase()
       if (browserLang.startsWith('en')) {
         setLocaleState('en')
+      } else if (browserLang.startsWith('de')) {
+        setLocaleState('de')
+      } else if (browserLang.startsWith('nl')) {
+        setLocaleState('nl')
       }
+      // Default is 'fr' which is already set
     }
   }, [])
 
@@ -39,7 +48,14 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const t = translations[locale]
 
   return (
-    <I18nContext.Provider value={{ locale, setLocale, t }}>
+    <I18nContext.Provider value={{
+      locale,
+      setLocale,
+      t,
+      localeNames,
+      localeFlags,
+      availableLocales: AVAILABLE_LOCALES
+    }}>
       {children}
     </I18nContext.Provider>
   )
