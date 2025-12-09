@@ -30,6 +30,7 @@ import {
   Trophy,
   Globe,
   Shield,
+  FileText,
 } from 'lucide-react'
 import { getInitials } from '@/lib/utils'
 import { Input } from '@/components/ui/input'
@@ -84,6 +85,12 @@ export function Header({ onMenuClick, showMenuButton = false }: HeaderProps) {
             className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
           >
             {t.nav.catalog}
+          </Link>
+          <Link
+            href="/docs"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            {t.nav.docs}
           </Link>
           {session && (
             <>

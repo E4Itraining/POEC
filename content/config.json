@@ -1,0 +1,34 @@
+{
+  "title": "Erythix Campus - Cours",
+  "description": "Plateforme de formation professionnelle",
+  "logo": "/logo.svg",
+  "favicon": "/favicon.ico",
+  "theme": {
+    "primaryColor": "#7C3AED",
+    "accentColor": "#8B5CF6",
+    "darkMode": true
+  },
+  "navigation": {
+    "header": [
+      { "title": "Accueil", "href": "/" },
+      { "title": "Cours", "href": "/docs" },
+      { "title": "Dashboard", "href": "/dashboard" }
+    ],
+    "footer": [
+      { "title": "GitHub", "href": "https://github.com" },
+      { "title": "Discord", "href": "https://discord.com" }
+    ]
+  },
+  "search": {
+    "enabled": true,
+    "placeholder": "Rechercher dans les cours..."
+  },
+  "features": {
+    "codeHighlight": true,
+    "copyCode": true,
+    "darkMode": true,
+    "tableOfContents": true,
+    "editOnGitHub": false,
+    "feedback": true
+  }
+}
