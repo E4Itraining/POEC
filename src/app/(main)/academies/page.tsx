@@ -4,8 +4,8 @@ import { academies } from '@/lib/academies'
 import { GraduationCap } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Training Academies - LMS Platform',
-  description: 'Explore our specialized training academies covering observability, HPC, cloud infrastructure, and more.',
+  title: 'Programmes de formation - Erythix Campus',
+  description: 'Découvrez nos programmes de formation spécialisés : observabilité, HPC, infrastructures souveraines. 40% théorie, 60% labs.',
 }
 
 export default function AcademiesPage() {

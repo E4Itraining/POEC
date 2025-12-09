@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
     await prisma.notification.create({
       data: {
         userId: user.id,
-        title: 'Bienvenue sur LMS Platform !',
+        title: 'Bienvenue sur Erythix Campus !',
         message: 'Votre compte a été créé avec succès. Explorez nos cours et commencez votre apprentissage.',
         type: 'INFO',
       },

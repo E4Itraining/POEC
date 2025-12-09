@@ -4,8 +4,8 @@ import { prisma } from '@/lib/prisma'
 import { MyCoursesClient } from './my-courses-client'
 
 export const metadata = {
-  title: 'My Courses | LMS Platform',
-  description: 'Manage your courses and track your progress',
+  title: 'Mes formations | Erythix Campus',
+  description: 'Gérez vos formations et suivez votre progression',
 }
 
 async function getUserCourses(userId: string) {

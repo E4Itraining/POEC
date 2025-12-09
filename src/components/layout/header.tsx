@@ -61,7 +61,7 @@ export function Header({ onMenuClick, showMenuButton = false }: HeaderProps) {
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <BookOpen className="h-5 w-5" aria-hidden="true" />
           </div>
-          <span className="font-bold text-xl hidden sm:inline-block">LMS Platform</span>
+          <span className="font-bold text-xl hidden sm:inline-block">Erythix Campus</span>
         </Link>
 
         {/* Navigation principale */}

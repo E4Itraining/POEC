@@ -22,7 +22,7 @@ function Footer() {
       <div className="container mx-auto px-4 py-12">
         <div className="grid gap-8 md:grid-cols-4">
           <div>
-            <h3 className="font-bold text-lg mb-4">LMS Platform</h3>
+            <h3 className="font-bold text-lg mb-4">Erythix Campus</h3>
             <p className="text-sm text-muted-foreground">
               Plateforme d'apprentissage en ligne complète, évolutive et accessible.
             </p>
@@ -53,7 +53,7 @@ function Footer() {
           </div>
         </div>
         <div className="border-t mt-8 pt-8 text-center text-sm text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} LMS Platform. Tous droits réservés.</p>
+          <p>&copy; {new Date().getFullYear()} Erythix Campus. Tous droits réservés.</p>
         </div>
       </div>
     </footer>

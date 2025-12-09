@@ -4,8 +4,8 @@ import { prisma } from '@/lib/prisma'
 import { DashboardClient } from './dashboard-client'
 
 export const metadata = {
-  title: 'Dashboard | LMS Platform',
-  description: 'Your personal learning space',
+  title: 'Tableau de bord | Erythix Campus',
+  description: 'Votre espace d\'apprentissage personnel',
 }
 
 async function getDashboardData(userId: string) {
