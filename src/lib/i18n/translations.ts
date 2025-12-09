@@ -1,4 +1,18 @@
-export type Locale = 'fr' | 'en'
+export type Locale = 'fr' | 'en' | 'de' | 'nl'
+
+export const localeNames: Record<Locale, string> = {
+  fr: 'Français',
+  en: 'English',
+  de: 'Deutsch',
+  nl: 'Nederlands',
+}
+
+export const localeFlags: Record<Locale, string> = {
+  fr: '🇫🇷',
+  en: '🇬🇧',
+  de: '🇩🇪',
+  nl: '🇳🇱',
+}
 
 export const translations = {
   en: {
@@ -14,6 +28,186 @@ export const translations = {
       logout: 'Logout',
       login: 'Login',
       register: 'Register',
+      academies: 'Academies',
+      catalog: 'Catalog',
+      learnerArea: 'Learner Area',
+      adminArea: 'Admin Area',
+    },
+    // Homepage
+    homepage: {
+      // Hero
+      hero: {
+        badge: '15 years of industry expertise',
+        title: 'Training the architects of tomorrow\'s industry.',
+        subtitle: 'Erythix Academy supports technical teams at the intersection of three major transformations: AI systems observability, sovereign high-performance infrastructure, and IT/OT industrial convergence.',
+        tagline: 'Demanding pedagogy. Open technologies. A European vision.',
+        cta: {
+          explore: 'Explore Programs',
+          diagnostic: 'Free Assessment',
+        },
+      },
+      // Golden Triangle
+      triangle: {
+        badge: 'The Golden Triangle',
+        title: 'Three domains converge. We train those who can connect them.',
+        intro: 'European industry faces an unprecedented transformation. AI systems enter production and must be monitored. Computing infrastructures must remain sovereign. IT and OT worlds, long siloed, merge around data.',
+        context: 'These three axes can no longer be treated separately. Every modern industrial project interweaves them. Yet few teams are trained to navigate their intersection.',
+        aiObs: {
+          title: 'AI Observability',
+          description: 'Drift, hallucinations, ML/LLM metrics, EU AI Act compliance. Making intelligent systems readable and auditable.',
+        },
+        hpc: {
+          title: 'Sovereign HPC',
+          description: 'Rocky Linux, GPU clusters, Slurm, scientific containers. The open-source building blocks powering European computing.',
+        },
+        itot: {
+          title: 'IT/OT Convergence',
+          description: 'Edge computing, Unified Namespace, SCADA, OpenTelemetry. Unifying data from sensor to dashboard.',
+        },
+        conclusion: 'Erythix Academy trains engineers, architects, and decision-makers capable of mastering all three dimensions — not just knowing one.',
+      },
+      // Philosophy
+      philosophy: {
+        badge: 'Our Philosophy',
+        title: 'Competence is not declared. It is built.',
+        intro: 'We believe the digital transformation of industry relies on people capable of understanding, designing, and evolving their systems — not simply operating them.',
+        approach: 'That\'s why our training doesn\'t aim for simple certification. It aims for technical autonomy: the ability to diagnose, arbitrate, and innovate in complex environments.',
+        convictionsTitle: 'Three convictions guide our approach:',
+        understand: {
+          title: 'Understand before applying',
+          description: 'Every training starts with fundamentals — architecture, protocols, design principles. An engineer who understands "why" will always know how to adapt "how".',
+        },
+        practice: {
+          title: 'Practice to anchor',
+          description: '60% of our modules take place in real environments: computing clusters, observability pipelines, containerized infrastructures. Mistakes are part of learning.',
+        },
+        transmit: {
+          title: 'Transmit to sustain',
+          description: 'Our participants don\'t just leave with individual skills. They leave with the ability to train their peers, document their choices, grow their organization.',
+        },
+      },
+      // Differentiators
+      differentiators: {
+        badge: 'What sets us apart',
+        fieldExpertise: {
+          title: 'Expertise forged in the field',
+          description: 'Our trainers have over 15 years of experience in the most demanding industrial environments: aerospace, energy, utilities. They know production constraints, availability requirements, the reality of teams maintaining critical systems.',
+        },
+        sovereignty: {
+          title: 'Commitment to technological sovereignty',
+          description: 'All our training relies on open-source, auditable, controllable technologies. We support European organizations toward technical independence — away from vendor lock-in and strategic dependencies.',
+        },
+        pedagogy: {
+          title: 'Structured learning paths',
+          description: 'Each program offers trajectories adapted to profiles and objectives: system administrator, platform engineer, architect, technical decision-maker. From solid foundations to advanced specializations, each step prepares the next.',
+        },
+      },
+      // Programs
+      programs: {
+        badge: 'Our Programs',
+        aiObs: {
+          title: 'AI Observability Academy',
+          subtitle: 'Master AI systems observability in production.',
+          fundamentals: 'AI Obs Fundamentals — Drift, hallucinations, ML/LLM metrics (2 days)',
+          llm: 'LLM Observability — RAG tracing, agents, guardrails (2 days)',
+          mlProd: 'ML Production Monitoring — From training to prod, semantic alerting (2 days)',
+          euAct: 'EU AI Act Compliance — Documentation, auditability, compliance (1 day)',
+        },
+        ciq: {
+          title: 'CIQ Stack Professional',
+          subtitle: 'Sovereign HPC infrastructure on Rocky Linux.',
+          rocky: 'Rocky Linux Administration — Enterprise system administration (3 days)',
+          hpc: 'HPC Cluster Deployment — Warewulf, Slurm, GPU scheduling (3 days)',
+          hpcAi: 'HPC for AI Workloads — ML/DL optimization on cluster (2 days)',
+          security: 'Security Hardening — Compliance, hardening, audit (2 days)',
+        },
+        m360: {
+          title: 'Monitoring 360',
+          subtitle: 'Unified IT/OT industrial observability.',
+          foundations: 'M360 Foundations — Logs, metrics, traces, complete vision (3 days)',
+          vm: 'VictoriaMetrics Mastery — Deployment, clustering, optimization (2 days)',
+          itot: 'IT/OT Convergence — Unified Namespace, edge, SCADA (2 days)',
+          otel: 'OpenTelemetry Deep Dive — Instrumentation, collectors, pipelines (2 days)',
+        },
+      },
+      // Certifications
+      certifications: {
+        badge: 'Certification Paths',
+        intro: 'Combine modules for structured skill development.',
+        obsEngineer: {
+          title: 'Observability Engineer',
+          duration: '7 days',
+          modules: 'VM Fundamentals, M360 Foundations, AI Obs Fundamentals.',
+        },
+        aiMlSpecialist: {
+          title: 'AI/ML Production Specialist',
+          duration: '6 days',
+          modules: 'AI Obs Fundamentals, ML Production Monitoring, LLM Observability.',
+        },
+        industrialArchitect: {
+          title: 'Industrial AI Architect',
+          duration: '8 days',
+          modules: 'IT/OT Fundamentals, M360 for Industry, AI Obs for Industry, HPC for AI.',
+        },
+        sovereignEngineer: {
+          title: 'Sovereign Infrastructure Engineer',
+          duration: '8 days',
+          modules: 'Rocky Linux Admin, HPC Cluster Deployment, VM Cluster Operations.',
+        },
+      },
+      // CTO Advocate
+      ctoAdvocate: {
+        badge: 'CTO-Advocate Support',
+        intro: 'More than a consultant. A technical partner who understands your industrial challenges, supports you in the field, and makes you autonomous.',
+        diagnostic: {
+          title: 'AI Readiness Diagnostic',
+          duration: '2-3 days',
+          description: 'Maturity assessment, gap identification, roadmap construction.',
+        },
+        integration: {
+          title: 'Observability Stack Integration',
+          duration: '2-4 months',
+          description: 'VictoriaMetrics, OpenTelemetry, dashboards on your infrastructure.',
+        },
+        continuous: {
+          title: 'Continuous Support',
+          duration: 'Subscription',
+          description: 'Architecture review, technology watch, technical support.',
+        },
+      },
+      // Organizations
+      organizations: {
+        badge: 'For Organizations',
+        financing: {
+          title: 'Financing and support',
+          description: 'Our programs are designed to integrate with professional training schemes. We support companies in preparing their OPCO funding applications and identifying mechanisms adapted to their situation.',
+          attestation: 'Our training delivers detailed competency certificates, documenting acquired skills and practical work completed.',
+        },
+        formats: {
+          title: 'Formats adapted to your constraints',
+          items: [
+            'Inter-company sessions scheduled throughout the year.',
+            'In-house training on-site or remote.',
+            'Blended paths combining asynchronous modules and live sessions.',
+            'Intensive bootcamps for accelerated skill-building.',
+          ],
+        },
+        contact: {
+          title: 'A dedicated contact',
+          description: 'From needs analysis to post-training evaluation, a pedagogical advisor supports you in building the right approach for your context.',
+        },
+      },
+      // CTA
+      cta: {
+        title: 'Let\'s build your teams\' skills together.',
+        exploreCatalog: 'Explore Catalog',
+        bookDiagnostic: 'Book Assessment',
+        contactUs: 'Contact Us',
+      },
+      // Footer
+      footer: {
+        brand: 'Erythix (France) • Aureonis (Belgium)',
+      },
     },
     // Dashboard
     dashboard: {
@@ -176,6 +370,7 @@ export const translations = {
       today: 'Today',
       yesterday: 'Yesterday',
       thisWeek: 'This week',
+      days: 'days',
     },
     // Accessibility
     a11y: {
@@ -214,6 +409,186 @@ export const translations = {
       logout: 'Déconnexion',
       login: 'Connexion',
       register: "S'inscrire",
+      academies: 'Académies',
+      catalog: 'Catalogue',
+      learnerArea: 'Espace apprenant',
+      adminArea: 'Administration',
+    },
+    // Homepage
+    homepage: {
+      // Hero
+      hero: {
+        badge: '15 ans d\'expertise industrie',
+        title: 'Former les architectes de l\'industrie de demain.',
+        subtitle: 'Erythix Academy accompagne les équipes techniques à l\'intersection de trois transformations majeures : l\'observabilité des systèmes d\'intelligence artificielle, l\'infrastructure haute performance souveraine, et la convergence IT/OT industrielle.',
+        tagline: 'Une pédagogie exigeante. Des technologies ouvertes. Une vision européenne.',
+        cta: {
+          explore: 'Explorer les formations',
+          diagnostic: 'Diagnostic gratuit',
+        },
+      },
+      // Triangle d'Or
+      triangle: {
+        badge: 'Le Triangle d\'Or',
+        title: 'Trois domaines convergent. Nous formons ceux qui savent les relier.',
+        intro: 'L\'industrie européenne fait face à une transformation sans précédent. Les systèmes d\'IA entrent en production et doivent être surveillés. Les infrastructures de calcul doivent rester souveraines. Les mondes IT et OT, longtemps cloisonnés, fusionnent autour de la donnée.',
+        context: 'Ces trois axes ne peuvent plus être traités séparément. Chaque projet industriel moderne les entrelace. Pourtant, rares sont les équipes formées à naviguer à leur intersection.',
+        aiObs: {
+          title: 'Observabilité IA',
+          description: 'Drift, hallucinations, métriques ML/LLM, conformité EU AI Act. Rendre les systèmes intelligents lisibles et auditables.',
+        },
+        hpc: {
+          title: 'HPC Souverain',
+          description: 'Rocky Linux, clusters GPU, Slurm, conteneurs scientifiques. Les briques open-source qui font tourner le calcul européen.',
+        },
+        itot: {
+          title: 'Convergence IT/OT',
+          description: 'Edge computing, Unified Namespace, SCADA, OpenTelemetry. Unifier la donnée du capteur au dashboard.',
+        },
+        conclusion: 'Erythix Academy forme les ingénieurs, architectes et décideurs capables de maîtriser ces trois dimensions — pas seulement d\'en connaître une seule.',
+      },
+      // Philosophie
+      philosophy: {
+        badge: 'Notre philosophie',
+        title: 'La compétence ne se décrète pas. Elle se construit.',
+        intro: 'Nous croyons que la transformation numérique de l\'industrie repose sur des femmes et des hommes capables de comprendre, concevoir et faire évoluer leurs systèmes — pas simplement de les opérer.',
+        approach: 'C\'est pourquoi nos formations ne visent pas la simple certification. Elles visent l\'autonomie technique : la capacité à diagnostiquer, à arbitrer, à innover dans des environnements complexes.',
+        convictionsTitle: 'Trois convictions guident notre approche :',
+        understand: {
+          title: 'Comprendre avant d\'appliquer',
+          description: 'Chaque formation commence par les fondamentaux — architecture, protocoles, principes de conception. Un ingénieur qui comprend le "pourquoi" saura toujours adapter le "comment".',
+        },
+        practice: {
+          title: 'Pratiquer pour ancrer',
+          description: '60% de nos modules se déroulent en environnement réel : clusters de calcul, pipelines d\'observabilité, infrastructures conteneurisées. Les erreurs font partie de l\'apprentissage.',
+        },
+        transmit: {
+          title: 'Transmettre pour pérenniser',
+          description: 'Nos participants ne repartent pas seulement avec des compétences individuelles. Ils repartent avec la capacité de former leurs pairs, de documenter leurs choix, de faire grandir leur organisation.',
+        },
+      },
+      // Différenciateurs
+      differentiators: {
+        badge: 'Ce qui nous différencie',
+        fieldExpertise: {
+          title: 'Une expertise forgée sur le terrain',
+          description: 'Nos formateurs cumulent plus de 15 ans d\'expérience dans les environnements industriels les plus exigeants : aéronautique, énergie, utilities. Ils connaissent les contraintes de production, les impératifs de disponibilité, la réalité des équipes qui doivent maintenir des systèmes critiques.',
+        },
+        sovereignty: {
+          title: 'Un engagement pour la souveraineté technologique',
+          description: 'Toutes nos formations s\'appuient sur des technologies open-source, auditables, maîtrisables. Nous accompagnons les organisations européennes vers l\'indépendance technique — loin des logiques de vendor lock-in et des dépendances stratégiques.',
+        },
+        pedagogy: {
+          title: 'Une pédagogie structurée par parcours',
+          description: 'Chaque programme propose des trajectoires adaptées aux profils et aux objectifs : administrateur système, ingénieur plateforme, architecte, décideur technique. Des fondations solides aux spécialisations avancées, chaque étape prépare la suivante.',
+        },
+      },
+      // Programmes
+      programs: {
+        badge: 'Nos programmes',
+        aiObs: {
+          title: 'AI Observability Academy',
+          subtitle: 'Maîtrisez l\'observabilité des systèmes IA en production.',
+          fundamentals: 'AI Obs Fundamentals — Drift, hallucinations, métriques ML/LLM (2 jours)',
+          llm: 'LLM Observability — Tracing RAG, agents, guardrails (2 jours)',
+          mlProd: 'ML Production Monitoring — Du training à la prod, alerting sémantique (2 jours)',
+          euAct: 'EU AI Act Compliance — Documentation, auditabilité, conformité (1 jour)',
+        },
+        ciq: {
+          title: 'CIQ Stack Professional',
+          subtitle: 'Infrastructure HPC souveraine sur Rocky Linux.',
+          rocky: 'Rocky Linux Administration — Administration système enterprise (3 jours)',
+          hpc: 'HPC Cluster Deployment — Warewulf, Slurm, GPU scheduling (3 jours)',
+          hpcAi: 'HPC for AI Workloads — Optimisation ML/DL sur cluster (2 jours)',
+          security: 'Security Hardening — Conformité, durcissement, audit (2 jours)',
+        },
+        m360: {
+          title: 'Monitoring 360',
+          subtitle: 'Observabilité unifiée IT/OT industrielle.',
+          foundations: 'M360 Foundations — Logs, métriques, traces, vision complète (3 jours)',
+          vm: 'VictoriaMetrics Mastery — Déploiement, clustering, optimisation (2 jours)',
+          itot: 'IT/OT Convergence — Unified Namespace, edge, SCADA (2 jours)',
+          otel: 'OpenTelemetry Deep Dive — Instrumentation, collecteurs, pipelines (2 jours)',
+        },
+      },
+      // Certifications
+      certifications: {
+        badge: 'Parcours certifiants',
+        intro: 'Combinez les modules pour une montée en compétence structurée.',
+        obsEngineer: {
+          title: 'Observability Engineer',
+          duration: '7 jours',
+          modules: 'VM Fundamentals, M360 Foundations, AI Obs Fundamentals.',
+        },
+        aiMlSpecialist: {
+          title: 'AI/ML Production Specialist',
+          duration: '6 jours',
+          modules: 'AI Obs Fundamentals, ML Production Monitoring, LLM Observability.',
+        },
+        industrialArchitect: {
+          title: 'Industrial AI Architect',
+          duration: '8 jours',
+          modules: 'IT/OT Fundamentals, M360 for Industry, AI Obs for Industry, HPC for AI.',
+        },
+        sovereignEngineer: {
+          title: 'Sovereign Infrastructure Engineer',
+          duration: '8 jours',
+          modules: 'Rocky Linux Admin, HPC Cluster Deployment, VM Cluster Operations.',
+        },
+      },
+      // CTO Advocate
+      ctoAdvocate: {
+        badge: 'Accompagnement CTO-Advocate',
+        intro: 'Plus qu\'un consultant. Un partenaire technique qui comprend vos enjeux industriels, vous accompagne sur le terrain, et vous rend autonomes.',
+        diagnostic: {
+          title: 'Diagnostic IA Readiness',
+          duration: '2-3 jours',
+          description: 'Évaluation de maturité, identification des gaps, construction de la roadmap.',
+        },
+        integration: {
+          title: 'Intégration Stack Observabilité',
+          duration: '2-4 mois',
+          description: 'VictoriaMetrics, OpenTelemetry, dashboards sur votre infrastructure.',
+        },
+        continuous: {
+          title: 'Accompagnement continu',
+          duration: 'Abonnement',
+          description: 'Revue d\'architecture, veille technologique, support technique.',
+        },
+      },
+      // Organisations
+      organizations: {
+        badge: 'Pour les organisations',
+        financing: {
+          title: 'Financement et accompagnement',
+          description: 'Nos programmes sont conçus pour s\'intégrer aux dispositifs de formation professionnelle. Nous accompagnons les entreprises dans le montage de leurs dossiers de financement OPCO et l\'identification des mécanismes adaptés à leur situation.',
+          attestation: 'Nos formations délivrent des attestations de compétences détaillées, documentant les acquis et les mises en pratique réalisées.',
+        },
+        formats: {
+          title: 'Formats adaptés à vos contraintes',
+          items: [
+            'Sessions inter-entreprises planifiées tout au long de l\'année.',
+            'Formations intra-entreprise sur site ou à distance.',
+            'Parcours blended combinant modules asynchrones et sessions live.',
+            'Bootcamps intensifs pour les montées en compétences accélérées.',
+          ],
+        },
+        contact: {
+          title: 'Un interlocuteur dédié',
+          description: 'De l\'analyse des besoins à l\'évaluation post-formation, un référent pédagogique vous accompagne pour construire le dispositif adapté à votre contexte.',
+        },
+      },
+      // CTA
+      cta: {
+        title: 'Construisons ensemble les compétences de vos équipes.',
+        exploreCatalog: 'Explorer le catalogue',
+        bookDiagnostic: 'Réserver un diagnostic',
+        contactUs: 'Nous contacter',
+      },
+      // Footer
+      footer: {
+        brand: 'Erythix (France) • Aureonis (Belgique)',
+      },
     },
     // Dashboard
     dashboard: {
@@ -376,6 +751,7 @@ export const translations = {
       today: 'Aujourd\'hui',
       yesterday: 'Hier',
       thisWeek: 'Cette semaine',
+      days: 'jours',
     },
     // Accessibility
     a11y: {
@@ -398,6 +774,768 @@ export const translations = {
         expertCourses: 'Cours par des experts',
         learningPaths: 'Parcours d\'apprentissage',
         activeLearners: 'Apprenants actifs',
+      },
+    },
+  },
+  de: {
+    // Navigation
+    nav: {
+      home: 'Startseite',
+      courses: 'Kurse',
+      myCourses: 'Meine Kurse',
+      dashboard: 'Dashboard',
+      achievements: 'Erfolge',
+      profile: 'Profil',
+      settings: 'Einstellungen',
+      logout: 'Abmelden',
+      login: 'Anmelden',
+      register: 'Registrieren',
+      academies: 'Akademien',
+      catalog: 'Katalog',
+      learnerArea: 'Lernbereich',
+      adminArea: 'Administration',
+    },
+    // Homepage
+    homepage: {
+      // Hero
+      hero: {
+        badge: '15 Jahre Industrieerfahrung',
+        title: 'Wir bilden die Architekten der Industrie von morgen aus.',
+        subtitle: 'Erythix Academy begleitet technische Teams an der Schnittstelle dreier großer Transformationen: KI-Systembeobachtbarkeit, souveräne Hochleistungsinfrastruktur und IT/OT-Industriekonvergenz.',
+        tagline: 'Anspruchsvolle Pädagogik. Offene Technologien. Eine europäische Vision.',
+        cta: {
+          explore: 'Programme erkunden',
+          diagnostic: 'Kostenlose Bewertung',
+        },
+      },
+      // Goldenes Dreieck
+      triangle: {
+        badge: 'Das Goldene Dreieck',
+        title: 'Drei Bereiche konvergieren. Wir bilden diejenigen aus, die sie verbinden können.',
+        intro: 'Die europäische Industrie steht vor einer beispiellosen Transformation. KI-Systeme gehen in Produktion und müssen überwacht werden. Recheninfrastrukturen müssen souverän bleiben. IT- und OT-Welten, lange getrennt, verschmelzen rund um Daten.',
+        context: 'Diese drei Achsen können nicht mehr getrennt behandelt werden. Jedes moderne Industrieprojekt verflecht sie. Dennoch sind nur wenige Teams darauf geschult, an ihrer Schnittstelle zu navigieren.',
+        aiObs: {
+          title: 'KI-Observability',
+          description: 'Drift, Halluzinationen, ML/LLM-Metriken, EU AI Act Compliance. Intelligente Systeme lesbar und auditierbar machen.',
+        },
+        hpc: {
+          title: 'Souveränes HPC',
+          description: 'Rocky Linux, GPU-Cluster, Slurm, wissenschaftliche Container. Die Open-Source-Bausteine, die europäisches Computing antreiben.',
+        },
+        itot: {
+          title: 'IT/OT-Konvergenz',
+          description: 'Edge Computing, Unified Namespace, SCADA, OpenTelemetry. Daten vom Sensor bis zum Dashboard vereinheitlichen.',
+        },
+        conclusion: 'Erythix Academy bildet Ingenieure, Architekten und Entscheidungsträger aus, die alle drei Dimensionen beherrschen — nicht nur eine kennen.',
+      },
+      // Philosophie
+      philosophy: {
+        badge: 'Unsere Philosophie',
+        title: 'Kompetenz wird nicht erklärt. Sie wird aufgebaut.',
+        intro: 'Wir glauben, dass die digitale Transformation der Industrie auf Menschen basiert, die in der Lage sind, ihre Systeme zu verstehen, zu entwerfen und weiterzuentwickeln — nicht nur zu bedienen.',
+        approach: 'Deshalb zielen unsere Schulungen nicht auf einfache Zertifizierung. Sie zielen auf technische Autonomie: die Fähigkeit zu diagnostizieren, zu entscheiden und in komplexen Umgebungen zu innovieren.',
+        convictionsTitle: 'Drei Überzeugungen leiten unseren Ansatz:',
+        understand: {
+          title: 'Verstehen vor Anwenden',
+          description: 'Jede Schulung beginnt mit den Grundlagen — Architektur, Protokolle, Designprinzipien. Ein Ingenieur, der das "Warum" versteht, wird immer wissen, wie er das "Wie" anpassen kann.',
+        },
+        practice: {
+          title: 'Üben zum Verankern',
+          description: '60% unserer Module finden in realen Umgebungen statt: Rechencluster, Observability-Pipelines, containerisierte Infrastrukturen. Fehler sind Teil des Lernens.',
+        },
+        transmit: {
+          title: 'Weitergeben zum Fortbestehen',
+          description: 'Unsere Teilnehmer gehen nicht nur mit individuellen Fähigkeiten. Sie gehen mit der Fähigkeit, ihre Kollegen zu schulen, ihre Entscheidungen zu dokumentieren, ihre Organisation wachsen zu lassen.',
+        },
+      },
+      // Unterscheidungsmerkmale
+      differentiators: {
+        badge: 'Was uns unterscheidet',
+        fieldExpertise: {
+          title: 'Expertise aus der Praxis geschmiedet',
+          description: 'Unsere Trainer haben über 15 Jahre Erfahrung in den anspruchsvollsten industriellen Umgebungen: Luft- und Raumfahrt, Energie, Versorgungsunternehmen. Sie kennen Produktionsbeschränkungen, Verfügbarkeitsanforderungen, die Realität von Teams, die kritische Systeme warten.',
+        },
+        sovereignty: {
+          title: 'Engagement für technologische Souveränität',
+          description: 'Alle unsere Schulungen basieren auf Open-Source-Technologien, die auditierbar und kontrollierbar sind. Wir unterstützen europäische Organisationen auf dem Weg zur technischen Unabhängigkeit — weg von Vendor Lock-in und strategischen Abhängigkeiten.',
+        },
+        pedagogy: {
+          title: 'Strukturierte Lernpfade',
+          description: 'Jedes Programm bietet Trajektorien, die an Profile und Ziele angepasst sind: Systemadministrator, Plattform-Ingenieur, Architekt, technischer Entscheidungsträger. Von soliden Grundlagen bis zu fortgeschrittenen Spezialisierungen bereitet jeder Schritt den nächsten vor.',
+        },
+      },
+      // Programme
+      programs: {
+        badge: 'Unsere Programme',
+        aiObs: {
+          title: 'AI Observability Academy',
+          subtitle: 'Beherrschen Sie KI-Systembeobachtbarkeit in der Produktion.',
+          fundamentals: 'AI Obs Fundamentals — Drift, Halluzinationen, ML/LLM-Metriken (2 Tage)',
+          llm: 'LLM Observability — RAG-Tracing, Agenten, Guardrails (2 Tage)',
+          mlProd: 'ML Production Monitoring — Vom Training zur Produktion, semantisches Alerting (2 Tage)',
+          euAct: 'EU AI Act Compliance — Dokumentation, Auditierbarkeit, Compliance (1 Tag)',
+        },
+        ciq: {
+          title: 'CIQ Stack Professional',
+          subtitle: 'Souveräne HPC-Infrastruktur auf Rocky Linux.',
+          rocky: 'Rocky Linux Administration — Enterprise-Systemadministration (3 Tage)',
+          hpc: 'HPC Cluster Deployment — Warewulf, Slurm, GPU-Scheduling (3 Tage)',
+          hpcAi: 'HPC for AI Workloads — ML/DL-Optimierung auf Cluster (2 Tage)',
+          security: 'Security Hardening — Compliance, Härtung, Audit (2 Tage)',
+        },
+        m360: {
+          title: 'Monitoring 360',
+          subtitle: 'Vereinheitlichte IT/OT-Industriebeobachtbarkeit.',
+          foundations: 'M360 Foundations — Logs, Metriken, Traces, vollständige Vision (3 Tage)',
+          vm: 'VictoriaMetrics Mastery — Deployment, Clustering, Optimierung (2 Tage)',
+          itot: 'IT/OT Convergence — Unified Namespace, Edge, SCADA (2 Tage)',
+          otel: 'OpenTelemetry Deep Dive — Instrumentierung, Kollektoren, Pipelines (2 Tage)',
+        },
+      },
+      // Zertifizierungen
+      certifications: {
+        badge: 'Zertifizierungspfade',
+        intro: 'Kombinieren Sie Module für strukturierte Kompetenzentwicklung.',
+        obsEngineer: {
+          title: 'Observability Engineer',
+          duration: '7 Tage',
+          modules: 'VM Fundamentals, M360 Foundations, AI Obs Fundamentals.',
+        },
+        aiMlSpecialist: {
+          title: 'AI/ML Production Specialist',
+          duration: '6 Tage',
+          modules: 'AI Obs Fundamentals, ML Production Monitoring, LLM Observability.',
+        },
+        industrialArchitect: {
+          title: 'Industrial AI Architect',
+          duration: '8 Tage',
+          modules: 'IT/OT Fundamentals, M360 for Industry, AI Obs for Industry, HPC for AI.',
+        },
+        sovereignEngineer: {
+          title: 'Sovereign Infrastructure Engineer',
+          duration: '8 Tage',
+          modules: 'Rocky Linux Admin, HPC Cluster Deployment, VM Cluster Operations.',
+        },
+      },
+      // CTO Advocate
+      ctoAdvocate: {
+        badge: 'CTO-Advocate Begleitung',
+        intro: 'Mehr als ein Berater. Ein technischer Partner, der Ihre industriellen Herausforderungen versteht, Sie vor Ort unterstützt und Sie autonom macht.',
+        diagnostic: {
+          title: 'KI-Readiness-Diagnose',
+          duration: '2-3 Tage',
+          description: 'Reifebewertung, Gap-Identifikation, Roadmap-Erstellung.',
+        },
+        integration: {
+          title: 'Observability-Stack-Integration',
+          duration: '2-4 Monate',
+          description: 'VictoriaMetrics, OpenTelemetry, Dashboards auf Ihrer Infrastruktur.',
+        },
+        continuous: {
+          title: 'Kontinuierliche Begleitung',
+          duration: 'Abonnement',
+          description: 'Architekturprüfung, Technologie-Monitoring, technischer Support.',
+        },
+      },
+      // Organisationen
+      organizations: {
+        badge: 'Für Organisationen',
+        financing: {
+          title: 'Finanzierung und Unterstützung',
+          description: 'Unsere Programme sind darauf ausgelegt, sich in berufliche Weiterbildungssysteme zu integrieren. Wir unterstützen Unternehmen bei der Vorbereitung ihrer Förderanträge und der Identifizierung geeigneter Mechanismen.',
+          attestation: 'Unsere Schulungen liefern detaillierte Kompetenzzertifikate, die erworbene Fähigkeiten und durchgeführte praktische Arbeiten dokumentieren.',
+        },
+        formats: {
+          title: 'An Ihre Anforderungen angepasste Formate',
+          items: [
+            'Firmenübergreifende Sitzungen das ganze Jahr über geplant.',
+            'Inhouse-Schulungen vor Ort oder remote.',
+            'Blended-Pfade mit asynchronen Modulen und Live-Sessions.',
+            'Intensive Bootcamps für beschleunigte Kompetenzentwicklung.',
+          ],
+        },
+        contact: {
+          title: 'Ein dedizierter Ansprechpartner',
+          description: 'Von der Bedarfsanalyse bis zur Post-Training-Evaluation unterstützt Sie ein pädagogischer Berater beim Aufbau des richtigen Ansatzes für Ihren Kontext.',
+        },
+      },
+      // CTA
+      cta: {
+        title: 'Lassen Sie uns gemeinsam die Kompetenzen Ihrer Teams aufbauen.',
+        exploreCatalog: 'Katalog erkunden',
+        bookDiagnostic: 'Bewertung buchen',
+        contactUs: 'Kontaktieren Sie uns',
+      },
+      // Footer
+      footer: {
+        brand: 'Erythix (Frankreich) • Aureonis (Belgien)',
+      },
+    },
+    // Dashboard
+    dashboard: {
+      welcome: 'Willkommen zurück',
+      subtitle: 'Setzen Sie Ihre Lernreise fort',
+      stats: {
+        coursesEnrolled: 'Eingeschriebene Kurse',
+        learningTime: 'Lernzeit',
+        avgProgress: 'Durchschn. Fortschritt',
+        badgesEarned: 'Verdiente Abzeichen',
+        hours: 'Stunden',
+        minutes: 'Min',
+      },
+      continueLearning: 'Lernen fortsetzen',
+      viewAll: 'Alle anzeigen',
+      recommendedCourses: 'Empfohlen für Sie',
+      recentBadges: 'Neueste Erfolge',
+      notifications: 'Benachrichtigungen',
+      noCoursesYet: 'Noch keine Kurse',
+      startLearning: 'Starten Sie noch heute!',
+      browseCourses: 'Kurse durchsuchen',
+      noBadgesYet: 'Noch keine Abzeichen',
+      earnBadges: 'Schließen Sie Kurse ab, um Abzeichen zu verdienen',
+      noNotifications: 'Alles aktuell!',
+      progress: 'Fortschritt',
+      lastAccessed: 'Zuletzt aufgerufen',
+      continueBtn: 'Fortsetzen',
+    },
+    // Courses
+    courses: {
+      catalog: 'Kurskatalog',
+      searchPlaceholder: 'Kurse suchen...',
+      allCategories: 'Alle Kategorien',
+      allLevels: 'Alle Stufen',
+      sortBy: 'Sortieren nach',
+      featured: 'Empfohlen',
+      newest: 'Neueste',
+      popular: 'Beliebt',
+      duration: 'Dauer',
+      free: 'Kostenlos',
+      enrolled: 'Eingeschrieben',
+      enrollNow: 'Jetzt einschreiben',
+      alreadyEnrolled: 'Bereits eingeschrieben',
+      continueCourse: 'Kurs fortsetzen',
+      students: 'Studenten',
+      modules: 'Module',
+      lessons: 'Lektionen',
+      quizzes: 'Quiz',
+      certificate: 'Zertifikat inklusive',
+      progressTracking: 'Fortschrittsverfolgung',
+      curriculum: 'Lehrplan',
+      description: 'Beschreibung',
+      instructor: 'Dozent',
+      reviews: 'Bewertungen',
+      whatYouWillLearn: 'Was Sie lernen werden',
+      courseIncludes: 'Dieser Kurs beinhaltet',
+      level: {
+        BEGINNER: 'Anfänger',
+        INTERMEDIATE: 'Mittelstufe',
+        ADVANCED: 'Fortgeschritten',
+        EXPERT: 'Experte',
+      },
+    },
+    // Learning interface
+    learn: {
+      courseProgress: 'Kursfortschritt',
+      lessonContent: 'Lektionsinhalt',
+      markComplete: 'Als abgeschlossen markieren',
+      completed: 'Abgeschlossen',
+      previousLesson: 'Vorherige',
+      nextLesson: 'Nächste',
+      takeQuiz: 'Quiz starten',
+      resources: 'Ressourcen',
+      notes: 'Notizen',
+      bookmarks: 'Lesezeichen',
+      addNote: 'Notiz hinzufügen...',
+      saveNote: 'Notiz speichern',
+      addBookmark: 'Lesezeichen hinzufügen',
+      removeBookmark: 'Lesezeichen entfernen',
+      lessonTypes: {
+        VIDEO: 'Video',
+        TEXT: 'Text',
+        QUIZ: 'Quiz',
+        ASSIGNMENT: 'Aufgabe',
+        INTERACTIVE: 'Interaktiv',
+      },
+    },
+    // Quiz
+    quiz: {
+      title: 'Quiz',
+      question: 'Frage',
+      of: 'von',
+      previous: 'Vorherige',
+      next: 'Nächste',
+      submit: 'Quiz abschicken',
+      timeRemaining: 'Verbleibende Zeit',
+      results: 'Quiz-Ergebnisse',
+      passed: 'Herzlichen Glückwunsch! Sie haben bestanden!',
+      failed: 'Diesmal nicht bestanden',
+      score: 'Ihre Punktzahl',
+      passingScore: 'Bestehensgrenze',
+      correctAnswers: 'Richtige Antworten',
+      tryAgain: 'Erneut versuchen',
+      reviewAnswers: 'Antworten überprüfen',
+      yourAnswer: 'Ihre Antwort',
+      correctAnswer: 'Richtige Antwort',
+      explanation: 'Erklärung',
+    },
+    // My Courses
+    myCourses: {
+      title: 'Meine Kurse',
+      inProgress: 'In Bearbeitung',
+      completedTab: 'Abgeschlossen',
+      certificates: 'Zertifikate',
+      noCourses: 'Keine Kurse gefunden',
+      startExploring: 'Entdecken Sie unseren Katalog!',
+      lessonsCompleted: 'Lektionen abgeschlossen',
+      timeSpent: 'Verbrachte Zeit',
+      enrolledOn: 'Eingeschrieben am',
+      completedOn: 'Abgeschlossen am',
+      viewCertificate: 'Zertifikat anzeigen',
+      downloadCertificate: 'Herunterladen',
+      certificateNumber: 'Zertifikatsnummer',
+      issuedOn: 'Ausgestellt am',
+    },
+    // Achievements
+    achievements: {
+      title: 'Erfolge',
+      totalBadges: 'Gesamte Abzeichen',
+      totalPoints: 'Gesamte Punkte',
+      recentlyEarned: 'Kürzlich verdient',
+      allBadges: 'Alle Abzeichen',
+      earnedOn: 'Verdient am',
+      points: 'Punkte',
+      categories: {
+        ACHIEVEMENT: 'Erfolg',
+        MILESTONE: 'Meilenstein',
+        SKILL: 'Fähigkeit',
+        SPECIAL: 'Speziell',
+      },
+    },
+    // Common
+    common: {
+      loading: 'Laden...',
+      error: 'Ein Fehler ist aufgetreten',
+      retry: 'Erneut versuchen',
+      save: 'Speichern',
+      cancel: 'Abbrechen',
+      delete: 'Löschen',
+      edit: 'Bearbeiten',
+      close: 'Schließen',
+      back: 'Zurück',
+      seeMore: 'Mehr anzeigen',
+      seeLess: 'Weniger anzeigen',
+      search: 'Suchen',
+      filter: 'Filtern',
+      sort: 'Sortieren',
+      noResults: 'Keine Ergebnisse gefunden',
+      ago: 'vor',
+      today: 'Heute',
+      yesterday: 'Gestern',
+      thisWeek: 'Diese Woche',
+      days: 'Tage',
+    },
+    // Accessibility
+    a11y: {
+      skipToContent: 'Zum Hauptinhalt springen',
+      toggleTheme: 'Dunkelmodus umschalten',
+      toggleLanguage: 'Sprache wechseln',
+      openMenu: 'Menü öffnen',
+      closeMenu: 'Menü schließen',
+      expandSection: 'Abschnitt erweitern',
+      collapseSection: 'Abschnitt reduzieren',
+    },
+    // Academies
+    academies: {
+      title: 'Schulungsakademien',
+      subtitle: 'Spezialisierte Lernpfade, entworfen von Branchenexperten. Beherrschen Sie modernste Technologien mit praktischen Kursen und realen Projekten.',
+      courses: 'Kurse',
+      learningPaths: 'Lernpfade',
+      explore: 'Erkunden',
+      stats: {
+        expertCourses: 'Expertengeleitete Kurse',
+        learningPaths: 'Lernpfade',
+        activeLearners: 'Aktive Lernende',
+      },
+    },
+  },
+  nl: {
+    // Navigation
+    nav: {
+      home: 'Home',
+      courses: 'Cursussen',
+      myCourses: 'Mijn Cursussen',
+      dashboard: 'Dashboard',
+      achievements: 'Prestaties',
+      profile: 'Profiel',
+      settings: 'Instellingen',
+      logout: 'Uitloggen',
+      login: 'Inloggen',
+      register: 'Registreren',
+      academies: 'Academies',
+      catalog: 'Catalogus',
+      learnerArea: 'Cursistenomgeving',
+      adminArea: 'Beheer',
+    },
+    // Homepage
+    homepage: {
+      // Hero
+      hero: {
+        badge: '15 jaar industrie-ervaring',
+        title: 'We leiden de architecten van de industrie van morgen op.',
+        subtitle: 'Erythix Academy begeleidt technische teams op het snijvlak van drie grote transformaties: AI-systeemobservability, soevereine high-performance infrastructuur en IT/OT industriële convergentie.',
+        tagline: 'Veeleisende pedagogie. Open technologieën. Een Europese visie.',
+        cta: {
+          explore: 'Programma\'s verkennen',
+          diagnostic: 'Gratis beoordeling',
+        },
+      },
+      // Gouden Driehoek
+      triangle: {
+        badge: 'De Gouden Driehoek',
+        title: 'Drie domeinen convergeren. Wij leiden degenen op die ze kunnen verbinden.',
+        intro: 'De Europese industrie staat voor een ongekende transformatie. AI-systemen gaan in productie en moeten worden gemonitord. Rekeninfrastructuren moeten soeverein blijven. IT- en OT-werelden, lang gescheiden, smelten samen rond data.',
+        context: 'Deze drie assen kunnen niet meer apart worden behandeld. Elk modern industrieel project verweeft ze. Toch zijn weinig teams getraind om op hun kruispunt te navigeren.',
+        aiObs: {
+          title: 'AI Observability',
+          description: 'Drift, hallucinaties, ML/LLM-metrics, EU AI Act compliance. Intelligente systemen leesbaar en controleerbaar maken.',
+        },
+        hpc: {
+          title: 'Soevereine HPC',
+          description: 'Rocky Linux, GPU-clusters, Slurm, wetenschappelijke containers. De open-source bouwstenen die Europese computing aandrijven.',
+        },
+        itot: {
+          title: 'IT/OT Convergentie',
+          description: 'Edge computing, Unified Namespace, SCADA, OpenTelemetry. Data van sensor tot dashboard verenigen.',
+        },
+        conclusion: 'Erythix Academy leidt ingenieurs, architecten en besluitvormers op die alle drie de dimensies beheersen — niet slechts één kennen.',
+      },
+      // Filosofie
+      philosophy: {
+        badge: 'Onze Filosofie',
+        title: 'Competentie wordt niet verklaard. Ze wordt opgebouwd.',
+        intro: 'Wij geloven dat de digitale transformatie van de industrie steunt op mensen die in staat zijn hun systemen te begrijpen, te ontwerpen en te laten evolueren — niet alleen te bedienen.',
+        approach: 'Daarom richten onze opleidingen zich niet op eenvoudige certificering. Ze richten zich op technische autonomie: het vermogen om te diagnosticeren, te beslissen en te innoveren in complexe omgevingen.',
+        convictionsTitle: 'Drie overtuigingen sturen onze aanpak:',
+        understand: {
+          title: 'Begrijpen voor toepassen',
+          description: 'Elke opleiding begint met de fundamenten — architectuur, protocollen, ontwerpprincipes. Een ingenieur die het "waarom" begrijpt, zal altijd weten hoe het "hoe" aan te passen.',
+        },
+        practice: {
+          title: 'Oefenen om te verankeren',
+          description: '60% van onze modules vindt plaats in echte omgevingen: rekenclusters, observability-pipelines, gecontaineriseerde infrastructuren. Fouten maken deel uit van het leren.',
+        },
+        transmit: {
+          title: 'Overdragen om te bestendigen',
+          description: 'Onze deelnemers vertrekken niet alleen met individuele vaardigheden. Ze vertrekken met het vermogen om hun collega\'s op te leiden, hun keuzes te documenteren, hun organisatie te laten groeien.',
+        },
+      },
+      // Onderscheidende kenmerken
+      differentiators: {
+        badge: 'Wat ons onderscheidt',
+        fieldExpertise: {
+          title: 'Expertise gesmeed in het veld',
+          description: 'Onze trainers hebben meer dan 15 jaar ervaring in de meest veeleisende industriële omgevingen: lucht- en ruimtevaart, energie, nutsbedrijven. Ze kennen productiebeperkingen, beschikbaarheidseisen, de realiteit van teams die kritieke systemen onderhouden.',
+        },
+        sovereignty: {
+          title: 'Inzet voor technologische soevereiniteit',
+          description: 'Al onze opleidingen steunen op open-source technologieën die auditeerbaar en controleerbaar zijn. We ondersteunen Europese organisaties naar technische onafhankelijkheid — weg van vendor lock-in en strategische afhankelijkheden.',
+        },
+        pedagogy: {
+          title: 'Gestructureerde leertrajecten',
+          description: 'Elk programma biedt trajecten aangepast aan profielen en doelen: systeembeheerder, platform-engineer, architect, technisch besluitvormer. Van solide fundamenten tot gevorderde specialisaties, elke stap bereidt de volgende voor.',
+        },
+      },
+      // Programma's
+      programs: {
+        badge: 'Onze Programma\'s',
+        aiObs: {
+          title: 'AI Observability Academy',
+          subtitle: 'Beheers AI-systeemobservability in productie.',
+          fundamentals: 'AI Obs Fundamentals — Drift, hallucinaties, ML/LLM-metrics (2 dagen)',
+          llm: 'LLM Observability — RAG-tracing, agents, guardrails (2 dagen)',
+          mlProd: 'ML Production Monitoring — Van training naar productie, semantische alerting (2 dagen)',
+          euAct: 'EU AI Act Compliance — Documentatie, auditeerbaarheid, compliance (1 dag)',
+        },
+        ciq: {
+          title: 'CIQ Stack Professional',
+          subtitle: 'Soevereine HPC-infrastructuur op Rocky Linux.',
+          rocky: 'Rocky Linux Administration — Enterprise systeembeheer (3 dagen)',
+          hpc: 'HPC Cluster Deployment — Warewulf, Slurm, GPU-scheduling (3 dagen)',
+          hpcAi: 'HPC for AI Workloads — ML/DL-optimalisatie op cluster (2 dagen)',
+          security: 'Security Hardening — Compliance, verharding, audit (2 dagen)',
+        },
+        m360: {
+          title: 'Monitoring 360',
+          subtitle: 'Geünificeerde IT/OT industriële observability.',
+          foundations: 'M360 Foundations — Logs, metrics, traces, complete visie (3 dagen)',
+          vm: 'VictoriaMetrics Mastery — Deployment, clustering, optimalisatie (2 dagen)',
+          itot: 'IT/OT Convergence — Unified Namespace, edge, SCADA (2 dagen)',
+          otel: 'OpenTelemetry Deep Dive — Instrumentatie, collectors, pipelines (2 dagen)',
+        },
+      },
+      // Certificeringen
+      certifications: {
+        badge: 'Certificeringstrajecten',
+        intro: 'Combineer modules voor gestructureerde competentieontwikkeling.',
+        obsEngineer: {
+          title: 'Observability Engineer',
+          duration: '7 dagen',
+          modules: 'VM Fundamentals, M360 Foundations, AI Obs Fundamentals.',
+        },
+        aiMlSpecialist: {
+          title: 'AI/ML Production Specialist',
+          duration: '6 dagen',
+          modules: 'AI Obs Fundamentals, ML Production Monitoring, LLM Observability.',
+        },
+        industrialArchitect: {
+          title: 'Industrial AI Architect',
+          duration: '8 dagen',
+          modules: 'IT/OT Fundamentals, M360 for Industry, AI Obs for Industry, HPC for AI.',
+        },
+        sovereignEngineer: {
+          title: 'Sovereign Infrastructure Engineer',
+          duration: '8 dagen',
+          modules: 'Rocky Linux Admin, HPC Cluster Deployment, VM Cluster Operations.',
+        },
+      },
+      // CTO Advocate
+      ctoAdvocate: {
+        badge: 'CTO-Advocate Begeleiding',
+        intro: 'Meer dan een consultant. Een technische partner die uw industriële uitdagingen begrijpt, u in het veld ondersteunt en u autonoom maakt.',
+        diagnostic: {
+          title: 'AI Readiness Diagnose',
+          duration: '2-3 dagen',
+          description: 'Volwassenheidsbeoordeling, gap-identificatie, roadmap-constructie.',
+        },
+        integration: {
+          title: 'Observability Stack Integratie',
+          duration: '2-4 maanden',
+          description: 'VictoriaMetrics, OpenTelemetry, dashboards op uw infrastructuur.',
+        },
+        continuous: {
+          title: 'Continue Begeleiding',
+          duration: 'Abonnement',
+          description: 'Architectuurreview, technologie-monitoring, technische ondersteuning.',
+        },
+      },
+      // Organisaties
+      organizations: {
+        badge: 'Voor Organisaties',
+        financing: {
+          title: 'Financiering en ondersteuning',
+          description: 'Onze programma\'s zijn ontworpen om te integreren met beroepsopleidingssystemen. We ondersteunen bedrijven bij het voorbereiden van hun subsidieaanvragen en het identificeren van geschikte mechanismen.',
+          attestation: 'Onze opleidingen leveren gedetailleerde competentiecertificaten, die verworven vaardigheden en uitgevoerd praktisch werk documenteren.',
+        },
+        formats: {
+          title: 'Formaten aangepast aan uw beperkingen',
+          items: [
+            'Intercompany-sessies het hele jaar door gepland.',
+            'In-house training op locatie of op afstand.',
+            'Blended trajecten met asynchrone modules en live sessies.',
+            'Intensieve bootcamps voor versnelde competentieopbouw.',
+          ],
+        },
+        contact: {
+          title: 'Een toegewijde contactpersoon',
+          description: 'Van behoefteanalyse tot post-training evaluatie, een pedagogisch adviseur ondersteunt u bij het opbouwen van de juiste aanpak voor uw context.',
+        },
+      },
+      // CTA
+      cta: {
+        title: 'Laten we samen de competenties van uw teams opbouwen.',
+        exploreCatalog: 'Catalogus verkennen',
+        bookDiagnostic: 'Beoordeling boeken',
+        contactUs: 'Neem contact op',
+      },
+      // Footer
+      footer: {
+        brand: 'Erythix (Frankrijk) • Aureonis (België)',
+      },
+    },
+    // Dashboard
+    dashboard: {
+      welcome: 'Welkom terug',
+      subtitle: 'Zet uw leerreis voort',
+      stats: {
+        coursesEnrolled: 'Ingeschreven cursussen',
+        learningTime: 'Leertijd',
+        avgProgress: 'Gem. voortgang',
+        badgesEarned: 'Verdiende badges',
+        hours: 'uren',
+        minutes: 'min',
+      },
+      continueLearning: 'Verder leren',
+      viewAll: 'Alles bekijken',
+      recommendedCourses: 'Aanbevolen voor u',
+      recentBadges: 'Recente prestaties',
+      notifications: 'Meldingen',
+      noCoursesYet: 'Nog geen cursussen',
+      startLearning: 'Begin vandaag met leren!',
+      browseCourses: 'Cursussen doorzoeken',
+      noBadgesYet: 'Nog geen badges',
+      earnBadges: 'Voltooi cursussen om badges te verdienen',
+      noNotifications: 'Alles bijgewerkt!',
+      progress: 'Voortgang',
+      lastAccessed: 'Laatst geopend',
+      continueBtn: 'Doorgaan',
+    },
+    // Courses
+    courses: {
+      catalog: 'Cursuscatalogus',
+      searchPlaceholder: 'Cursussen zoeken...',
+      allCategories: 'Alle categorieën',
+      allLevels: 'Alle niveaus',
+      sortBy: 'Sorteren op',
+      featured: 'Uitgelicht',
+      newest: 'Nieuwste',
+      popular: 'Populair',
+      duration: 'Duur',
+      free: 'Gratis',
+      enrolled: 'Ingeschreven',
+      enrollNow: 'Nu inschrijven',
+      alreadyEnrolled: 'Al ingeschreven',
+      continueCourse: 'Cursus voortzetten',
+      students: 'studenten',
+      modules: 'modules',
+      lessons: 'lessen',
+      quizzes: 'quizzen',
+      certificate: 'Certificaat inbegrepen',
+      progressTracking: 'Voortgang bijhouden',
+      curriculum: 'Curriculum',
+      description: 'Beschrijving',
+      instructor: 'Docent',
+      reviews: 'Beoordelingen',
+      whatYouWillLearn: 'Wat u zult leren',
+      courseIncludes: 'Deze cursus omvat',
+      level: {
+        BEGINNER: 'Beginner',
+        INTERMEDIATE: 'Gemiddeld',
+        ADVANCED: 'Gevorderd',
+        EXPERT: 'Expert',
+      },
+    },
+    // Learning interface
+    learn: {
+      courseProgress: 'Cursusvoortgang',
+      lessonContent: 'Lesinhoud',
+      markComplete: 'Markeren als voltooid',
+      completed: 'Voltooid',
+      previousLesson: 'Vorige',
+      nextLesson: 'Volgende',
+      takeQuiz: 'Quiz starten',
+      resources: 'Bronnen',
+      notes: 'Notities',
+      bookmarks: 'Bladwijzers',
+      addNote: 'Notitie toevoegen...',
+      saveNote: 'Notitie opslaan',
+      addBookmark: 'Bladwijzer toevoegen',
+      removeBookmark: 'Bladwijzer verwijderen',
+      lessonTypes: {
+        VIDEO: 'Video',
+        TEXT: 'Tekst',
+        QUIZ: 'Quiz',
+        ASSIGNMENT: 'Opdracht',
+        INTERACTIVE: 'Interactief',
+      },
+    },
+    // Quiz
+    quiz: {
+      title: 'Quiz',
+      question: 'Vraag',
+      of: 'van',
+      previous: 'Vorige',
+      next: 'Volgende',
+      submit: 'Quiz indienen',
+      timeRemaining: 'Resterende tijd',
+      results: 'Quiz-resultaten',
+      passed: 'Gefeliciteerd! U bent geslaagd!',
+      failed: 'U bent deze keer niet geslaagd',
+      score: 'Uw score',
+      passingScore: 'Vereiste score',
+      correctAnswers: 'Correcte antwoorden',
+      tryAgain: 'Opnieuw proberen',
+      reviewAnswers: 'Antwoorden bekijken',
+      yourAnswer: 'Uw antwoord',
+      correctAnswer: 'Correct antwoord',
+      explanation: 'Uitleg',
+    },
+    // My Courses
+    myCourses: {
+      title: 'Mijn Cursussen',
+      inProgress: 'In uitvoering',
+      completedTab: 'Voltooid',
+      certificates: 'Certificaten',
+      noCourses: 'Geen cursussen gevonden',
+      startExploring: 'Verken onze catalogus!',
+      lessonsCompleted: 'lessen voltooid',
+      timeSpent: 'bestede tijd',
+      enrolledOn: 'Ingeschreven op',
+      completedOn: 'Voltooid op',
+      viewCertificate: 'Certificaat bekijken',
+      downloadCertificate: 'Downloaden',
+      certificateNumber: 'Certificaatnummer',
+      issuedOn: 'Uitgegeven op',
+    },
+    // Achievements
+    achievements: {
+      title: 'Prestaties',
+      totalBadges: 'Totale badges',
+      totalPoints: 'Totale punten',
+      recentlyEarned: 'Recent verdiend',
+      allBadges: 'Alle badges',
+      earnedOn: 'Verdiend op',
+      points: 'punten',
+      categories: {
+        ACHIEVEMENT: 'Prestatie',
+        MILESTONE: 'Mijlpaal',
+        SKILL: 'Vaardigheid',
+        SPECIAL: 'Speciaal',
+      },
+    },
+    // Common
+    common: {
+      loading: 'Laden...',
+      error: 'Er is een fout opgetreden',
+      retry: 'Opnieuw proberen',
+      save: 'Opslaan',
+      cancel: 'Annuleren',
+      delete: 'Verwijderen',
+      edit: 'Bewerken',
+      close: 'Sluiten',
+      back: 'Terug',
+      seeMore: 'Meer zien',
+      seeLess: 'Minder zien',
+      search: 'Zoeken',
+      filter: 'Filteren',
+      sort: 'Sorteren',
+      noResults: 'Geen resultaten gevonden',
+      ago: 'geleden',
+      today: 'Vandaag',
+      yesterday: 'Gisteren',
+      thisWeek: 'Deze week',
+      days: 'dagen',
+    },
+    // Accessibility
+    a11y: {
+      skipToContent: 'Ga naar hoofdinhoud',
+      toggleTheme: 'Donkere modus wisselen',
+      toggleLanguage: 'Taal wisselen',
+      openMenu: 'Menu openen',
+      closeMenu: 'Menu sluiten',
+      expandSection: 'Sectie uitvouwen',
+      collapseSection: 'Sectie inklappen',
+    },
+    // Academies
+    academies: {
+      title: 'Opleidingsakademies',
+      subtitle: 'Gespecialiseerde leertrajecten ontworpen door industrie-experts. Beheers geavanceerde technologieën met praktische cursussen en echte projecten.',
+      courses: 'cursussen',
+      learningPaths: 'leertrajecten',
+      explore: 'Verkennen',
+      stats: {
+        expertCourses: 'Expert-geleide cursussen',
+        learningPaths: 'Leertrajecten',
+        activeLearners: 'Actieve lerenden',
       },
     },
   },

@@ -28,9 +28,13 @@ import {
   GraduationCap,
   LayoutDashboard,
   Trophy,
+  Globe,
+  Shield,
 } from 'lucide-react'
 import { getInitials } from '@/lib/utils'
 import { Input } from '@/components/ui/input'
+import { useI18n } from '@/lib/i18n'
+import { Locale } from '@/lib/i18n/translations'
 
 interface HeaderProps {
   onMenuClick?: () => void
@@ -41,6 +45,9 @@ export function Header({ onMenuClick, showMenuButton = false }: HeaderProps) {
   const { data: session } = useSession()
   const { theme, setTheme } = useTheme()
   const [searchOpen, setSearchOpen] = useState(false)
+  const { locale, setLocale, t, localeNames, localeFlags, availableLocales } = useI18n()
+
+  const isAdmin = session?.user?.role === 'ADMIN' || session?.user?.role === 'INSTRUCTOR'
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -51,7 +58,7 @@ export function Header({ onMenuClick, showMenuButton = false }: HeaderProps) {
             size="icon"
             className="mr-2 md:hidden"
             onClick={onMenuClick}
-            aria-label="Ouvrir le menu"
+            aria-label={t.a11y.openMenu}
           >
             <Menu className="h-5 w-5" />
           </Button>
@@ -61,7 +68,7 @@ export function Header({ onMenuClick, showMenuButton = false }: HeaderProps) {
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <BookOpen className="h-5 w-5" aria-hidden="true" />
           </div>
-          <span className="font-bold text-xl hidden sm:inline-block">Erythix Campus</span>
+          <span className="font-bold text-xl hidden sm:inline-block">Erythix Academy</span>
         </Link>
 
         {/* Navigation principale */}
@@ -70,13 +77,13 @@ export function Header({ onMenuClick, showMenuButton = false }: HeaderProps) {
             href="/academies"
             className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
           >
-            Academies
+            {t.nav.academies}
           </Link>
           <Link
             href="/courses"
             className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
           >
-            Catalogue
+            {t.nav.catalog}
           </Link>
           {session && (
             <>
@@ -84,13 +91,13 @@ export function Header({ onMenuClick, showMenuButton = false }: HeaderProps) {
                 href="/dashboard"
                 className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
               >
-                Tableau de bord
+                {t.nav.dashboard}
               </Link>
               <Link
                 href="/my-courses"
                 className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
               >
-                Mes cours
+                {t.nav.myCourses}
               </Link>
             </>
           )}
@@ -102,9 +109,9 @@ export function Header({ onMenuClick, showMenuButton = false }: HeaderProps) {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
             <Input
               type="search"
-              placeholder="Rechercher des cours..."
+              placeholder={t.courses.searchPlaceholder}
               className="pl-9 w-full"
-              aria-label="Rechercher des cours"
+              aria-label={t.courses.searchPlaceholder}
             />
           </div>
         </div>
@@ -115,19 +122,46 @@ export function Header({ onMenuClick, showMenuButton = false }: HeaderProps) {
           size="icon"
           className="lg:hidden mr-2"
           onClick={() => setSearchOpen(!searchOpen)}
-          aria-label="Rechercher"
+          aria-label={t.common.search}
         >
           <Search className="h-5 w-5" />
         </Button>
 
         {/* Actions */}
         <div className="flex items-center gap-2">
+          {/* Sélecteur de langue */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label={t.a11y.toggleLanguage}
+              >
+                <Globe className="h-5 w-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-40">
+              <DropdownMenuLabel>{t.a11y.toggleLanguage}</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {availableLocales.map((loc) => (
+                <DropdownMenuItem
+                  key={loc}
+                  className={`cursor-pointer ${locale === loc ? 'bg-accent' : ''}`}
+                  onClick={() => setLocale(loc as Locale)}
+                >
+                  <span className="mr-2">{localeFlags[loc as Locale]}</span>
+                  {localeNames[loc as Locale]}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           {/* Thème */}
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            aria-label={theme === 'dark' ? 'Activer le mode clair' : 'Activer le mode sombre'}
+            aria-label={t.a11y.toggleTheme}
           >
             {theme === 'dark' ? (
               <Sun className="h-5 w-5" aria-hidden="true" />
@@ -139,9 +173,25 @@ export function Header({ onMenuClick, showMenuButton = false }: HeaderProps) {
           {session ? (
             <>
               {/* Notifications */}
-              <Button variant="ghost" size="icon" aria-label="Notifications">
+              <Button variant="ghost" size="icon" aria-label={t.dashboard.notifications}>
                 <Bell className="h-5 w-5" aria-hidden="true" />
               </Button>
+
+              {/* Lien rapide vers l'espace apprenant */}
+              <Button variant="ghost" size="icon" asChild aria-label={t.nav.learnerArea}>
+                <Link href="/dashboard">
+                  <GraduationCap className="h-5 w-5" aria-hidden="true" />
+                </Link>
+              </Button>
+
+              {/* Lien admin si applicable */}
+              {isAdmin && (
+                <Button variant="ghost" size="icon" asChild aria-label={t.nav.adminArea}>
+                  <Link href="/admin">
+                    <Shield className="h-5 w-5 text-orange-500" aria-hidden="true" />
+                  </Link>
+                </Button>
+              )}
 
               {/* Menu utilisateur */}
               <DropdownMenu>
@@ -166,32 +216,43 @@ export function Header({ onMenuClick, showMenuButton = false }: HeaderProps) {
                   <DropdownMenuItem asChild>
                     <Link href="/dashboard" className="cursor-pointer">
                       <LayoutDashboard className="mr-2 h-4 w-4" aria-hidden="true" />
-                      Tableau de bord
+                      {t.nav.dashboard}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/my-courses" className="cursor-pointer">
                       <GraduationCap className="mr-2 h-4 w-4" aria-hidden="true" />
-                      Mes cours
+                      {t.nav.myCourses}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/achievements" className="cursor-pointer">
                       <Trophy className="mr-2 h-4 w-4" aria-hidden="true" />
-                      Mes badges
+                      {t.nav.achievements}
                     </Link>
                   </DropdownMenuItem>
+                  {isAdmin && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <Link href="/admin" className="cursor-pointer text-orange-500">
+                          <Shield className="mr-2 h-4 w-4" aria-hidden="true" />
+                          {t.nav.adminArea}
+                        </Link>
+                      </DropdownMenuItem>
+                    </>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
                     <Link href="/profile" className="cursor-pointer">
                       <User className="mr-2 h-4 w-4" aria-hidden="true" />
-                      Mon profil
+                      {t.nav.profile}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/settings" className="cursor-pointer">
                       <Settings className="mr-2 h-4 w-4" aria-hidden="true" />
-                      Paramètres
+                      {t.nav.settings}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
@@ -200,7 +261,7 @@ export function Header({ onMenuClick, showMenuButton = false }: HeaderProps) {
                     onClick={() => signOut({ callbackUrl: '/' })}
                   >
                     <LogOut className="mr-2 h-4 w-4" aria-hidden="true" />
-                    Se déconnecter
+                    {t.nav.logout}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -208,10 +269,10 @@ export function Header({ onMenuClick, showMenuButton = false }: HeaderProps) {
           ) : (
             <div className="flex items-center gap-2">
               <Button variant="ghost" asChild>
-                <Link href="/auth/login">Connexion</Link>
+                <Link href="/auth/login">{t.nav.login}</Link>
               </Button>
               <Button asChild>
-                <Link href="/auth/register">Inscription</Link>
+                <Link href="/auth/register">{t.nav.register}</Link>
               </Button>
             </div>
           )}
@@ -225,9 +286,9 @@ export function Header({ onMenuClick, showMenuButton = false }: HeaderProps) {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
             <Input
               type="search"
-              placeholder="Rechercher des cours..."
+              placeholder={t.courses.searchPlaceholder}
               className="pl-9 w-full"
-              aria-label="Rechercher des cours"
+              aria-label={t.courses.searchPlaceholder}
               autoFocus
             />
             <Button
@@ -235,7 +296,7 @@ export function Header({ onMenuClick, showMenuButton = false }: HeaderProps) {
               size="icon"
               className="absolute right-1 top-1/2 -translate-y-1/2"
               onClick={() => setSearchOpen(false)}
-              aria-label="Fermer la recherche"
+              aria-label={t.common.close}
             >
               <X className="h-4 w-4" />
             </Button>
