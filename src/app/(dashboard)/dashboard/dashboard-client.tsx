@@ -69,7 +69,7 @@ interface DashboardClientProps {
       id: string
       slug: string
       title: string
-      shortDescription: string
+      shortDescription: string | null
       thumbnail: string | null
       level: string
       category: string
