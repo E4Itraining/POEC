@@ -8,7 +8,8 @@ import { DocBreadcrumb } from '@/components/docs/doc-breadcrumb';
 import { DocNavigation } from '@/components/docs/doc-navigation';
 import { TableOfContents } from '@/components/docs/table-of-contents';
 import { DocSearch } from '@/components/docs/doc-search';
-import { Clock, Calendar, Tag } from 'lucide-react';
+import { Clock, Calendar, Tag, Edit, Github } from 'lucide-react';
+import gitConfig from '@/../../content/config.json';
 
 interface DocPageClientProps {
   doc: DocContent;
@@ -19,6 +20,7 @@ interface DocPageClientProps {
     prev?: NavItem;
     next?: NavItem;
   };
+  slug?: string;
 }
 
 export function DocPageClient({
@@ -27,7 +29,17 @@ export function DocPageClient({
   sidebarNav,
   breadcrumbs,
   prevNext,
+  slug = '',
 }: DocPageClientProps) {
+  // Generate GitHub edit URL
+  const getEditUrl = () => {
+    if (!gitConfig.features?.editOnGitHub || !gitConfig.git) return null;
+    const filePath = slug ? `${slug}.mdx` : 'index.mdx';
+    return `${gitConfig.git.editUrl}/${filePath}`;
+  };
+
+  const editUrl = getEditUrl();
+
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* Top bar with search */}
@@ -49,6 +61,17 @@ export function DocPageClient({
                   <Calendar className="h-4 w-4" />
                   {doc.readingTime}
                 </span>
+              )}
+              {editUrl && (
+                <a
+                  href={editUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1 hover:text-violet-500 dark:hover:text-violet-400 transition-colors"
+                >
+                  <Github className="h-4 w-4" />
+                  Edit on GitHub
+                </a>
               )}
             </div>
           </div>

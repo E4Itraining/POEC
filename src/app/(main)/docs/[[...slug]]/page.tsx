@@ -60,6 +60,7 @@ export default async function DocsPage({ params }: PageProps) {
       sidebarNav={sidebarNav}
       breadcrumbs={breadcrumbs}
       prevNext={{ prev, next }}
+      slug={slug}
     />
   );
 }
