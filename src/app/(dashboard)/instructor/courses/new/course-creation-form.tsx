@@ -50,6 +50,7 @@ export function CourseCreationForm() {
     price: 0,
     isFree: true,
     tags: '',
+    thumbnail: '',
   })
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
