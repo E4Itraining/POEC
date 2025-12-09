@@ -848,3 +848,119 @@ model UserOAuthConnection {
   @@unique([provider, providerUserId])
   @@index([userId])
 }
+
+// ============================================
+// SESSIONS LIVE / WEBINAIRES
+// ============================================
+
+model LiveSession {
+  id              String   @id @default(cuid())
+  title           String
+  description     String?
+  scheduledAt     DateTime
+  duration        Int      @default(60)  // Durée prévue en minutes
+  status          String   @default("SCHEDULED")  // SCHEDULED, LIVE, ENDED, CANCELLED
+  type            String   @default("WEBINAR")  // WEBINAR, WORKSHOP, Q_AND_A, OFFICE_HOURS
+  maxParticipants Int?     // null = illimité
+
+  // Configuration de la session
+  roomUrl         String?  // URL de la salle (Jitsi, Zoom, etc.)
+  roomId          String?  // ID de la salle
+  provider        String   @default("JITSI")  // JITSI, ZOOM, GOOGLE_MEET, TEAMS, CUSTOM
+  accessCode      String?  // Code d'accès optionnel
+  recordingUrl    String?  // URL de l'enregistrement après la session
+
+  // Paramètres
+  isRecorded      Boolean  @default(true)
+  allowChat       Boolean  @default(true)
+  allowQuestions  Boolean  @default(true)
+  allowScreenShare Boolean @default(true)
+  requiresEnrollment Boolean @default(true)  // Si true, seuls les inscrits peuvent participer
+
+  // Métadonnées
+  actualStartAt   DateTime?
+  actualEndAt     DateTime?
+  participantCount Int     @default(0)
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  hostId          String
+  courseId        String?
+  lessonId        String?
+
+  registrations   LiveSessionRegistration[]
+
+  @@index([hostId])
+  @@index([courseId])
+  @@index([lessonId])
+  @@index([scheduledAt])
+  @@index([status])
+}
+
+// LiveSessionStatus values: SCHEDULED, LIVE, ENDED, CANCELLED
+// LiveSessionType values: WEBINAR, WORKSHOP, Q_AND_A, OFFICE_HOURS
+// LiveSessionProvider values: JITSI, ZOOM, GOOGLE_MEET, TEAMS, CUSTOM
+
+model LiveSessionRegistration {
+  id              String   @id @default(cuid())
+  status          String   @default("REGISTERED")  // REGISTERED, ATTENDED, NO_SHOW, CANCELLED
+  joinedAt        DateTime?
+  leftAt          DateTime?
+  attendanceDuration Int?  // Durée de présence en minutes
+
+  createdAt       DateTime @default(now())
+
+  // Relations
+  userId          String
+  sessionId       String
+  session         LiveSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, sessionId])
+  @@index([userId])
+  @@index([sessionId])
+}
+
+// RegistrationStatus values: REGISTERED, ATTENDED, NO_SHOW, CANCELLED
+
+// ============================================
+// MÉDIAS ET RESSOURCES
+// ============================================
+
+model MediaFile {
+  id              String   @id @default(cuid())
+  fileName        String
+  originalName    String
+  mimeType        String
+  size            Int      // Taille en octets
+  url             String   // URL publique
+
+  // Métadonnées
+  type            String   @default("OTHER")  // VIDEO, IMAGE, DOCUMENT, AUDIO, SCREENCAST, OTHER
+  duration        Int?     // Pour les vidéos/audios en secondes
+  width           Int?     // Pour les images/vidéos
+  height          Int?     // Pour les images/vidéos
+  thumbnailUrl    String?  // Miniature générée
+
+  // Statut de traitement (pour les vidéos)
+  processingStatus String  @default("PENDING")  // PENDING, PROCESSING, COMPLETED, FAILED
+  processingError  String?
+
+  // Organisation
+  category        String   @default("general")
+  tags            String?  // JSON array
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  uploadedById    String
+
+  @@index([uploadedById])
+  @@index([type])
+  @@index([category])
+}
+
+// MediaType values: VIDEO, IMAGE, DOCUMENT, AUDIO, SCREENCAST, OTHER
+// ProcessingStatus values: PENDING, PROCESSING, COMPLETED, FAILED
