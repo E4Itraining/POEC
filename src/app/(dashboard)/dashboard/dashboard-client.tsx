@@ -7,6 +7,8 @@ import { LearnerHeader } from '@/components/learner/header'
 import { StatsCard } from '@/components/learner/stats-card'
 import { CourseProgressCard } from '@/components/learner/course-progress-card'
 import { BadgeCard } from '@/components/learner/badge-card'
+import { StreakCounter } from '@/components/learner/streak-counter'
+import { QuickActions } from '@/components/learner/quick-actions'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -22,6 +24,8 @@ import {
   Sparkles,
   Users,
   Star,
+  Flame,
+  Target,
 } from 'lucide-react'
 
 interface DashboardClientProps {
@@ -118,20 +122,28 @@ export function DashboardClient({ user, data }: DashboardClientProps) {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       {/* Header */}
       <LearnerHeader />
 
       <div className="p-4 lg:p-8 space-y-8 max-w-7xl mx-auto">
-        {/* Welcome Section */}
-        <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary via-primary/90 to-primary/70 p-8 text-primary-foreground">
-          {/* Background decoration */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
-          <div className="absolute bottom-0 left-1/4 w-32 h-32 bg-white/5 rounded-full translate-y-1/2" />
+        {/* Welcome Section - Premium glassmorphism design */}
+        <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary via-primary/90 to-cyan-600 p-8 text-primary-foreground">
+          {/* Background decorations */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
+          <div className="absolute bottom-0 left-1/4 w-48 h-48 bg-cyan-400/20 rounded-full translate-y-1/2 blur-2xl" />
+          <div className="absolute top-1/2 right-1/4 w-32 h-32 bg-white/5 rounded-full" />
+
+          {/* Mesh gradient overlay */}
+          <div className="absolute inset-0 opacity-30">
+            <div className="absolute top-10 left-10 w-20 h-20 bg-white/20 rounded-full blur-xl" />
+            <div className="absolute bottom-10 right-20 w-16 h-16 bg-cyan-300/30 rounded-full blur-xl" />
+          </div>
 
           <div className="relative flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div>
-              <p className="text-primary-foreground/80 text-sm font-medium mb-1">
+              <p className="text-primary-foreground/80 text-sm font-medium mb-1 flex items-center gap-2">
+                <Sparkles className="h-4 w-4" />
                 {t.dashboard.welcome},
               </p>
               <h1 className="text-3xl md:text-4xl font-bold mb-2">
@@ -141,17 +153,29 @@ export function DashboardClient({ user, data }: DashboardClientProps) {
                 {t.dashboard.subtitle}
               </p>
             </div>
-            <Button
-              asChild
-              size="lg"
-              variant="secondary"
-              className="shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <Link href="/courses" className="gap-2">
-                <BookOpen className="h-5 w-5" />
-                {t.dashboard.browseCourses}
-              </Link>
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Button
+                asChild
+                size="lg"
+                className="bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/20 text-white shadow-lg hover:shadow-xl transition-all"
+              >
+                <Link href="/my-courses" className="gap-2">
+                  <Target className="h-5 w-5" />
+                  Mes cours
+                </Link>
+              </Button>
+              <Button
+                asChild
+                size="lg"
+                variant="secondary"
+                className="shadow-lg hover:shadow-xl transition-shadow"
+              >
+                <Link href="/courses" className="gap-2">
+                  <BookOpen className="h-5 w-5" />
+                  {t.dashboard.browseCourses}
+                </Link>
+              </Button>
+            </div>
           </div>
         </section>
 
@@ -160,13 +184,21 @@ export function DashboardClient({ user, data }: DashboardClientProps) {
           <h2 id="stats-heading" className="sr-only">
             {locale === 'fr' ? 'Vos statistiques' : 'Your statistics'}
           </h2>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+            {/* Streak Counter - Premium component */}
+            <div className="sm:col-span-2 lg:col-span-2">
+              <StreakCounter
+                currentStreak={7}
+                longestStreak={21}
+                lastActiveDate={new Date()}
+              />
+            </div>
             <StatsCard
               title={t.dashboard.stats.coursesEnrolled}
               value={data.stats.totalCoursesEnrolled}
               subtitle={`${data.stats.completedCourses} ${locale === 'fr' ? 'terminé(s)' : 'completed'}`}
               icon={BookOpen}
-              variant="primary"
+              variant="cyan"
             />
             <StatsCard
               title={t.dashboard.stats.learningTime}
@@ -176,17 +208,11 @@ export function DashboardClient({ user, data }: DashboardClientProps) {
               variant="success"
             />
             <StatsCard
-              title={t.dashboard.stats.avgProgress}
-              value={`${Math.round(data.stats.averageProgress)}%`}
-              icon={TrendingUp}
-              variant="warning"
-            />
-            <StatsCard
               title={t.dashboard.stats.badgesEarned}
               value={data.stats.badgesCount}
               subtitle={`${data.stats.totalPoints} pts`}
               icon={Trophy}
-              variant="default"
+              variant="warning"
             />
           </div>
         </section>
@@ -422,6 +448,9 @@ export function DashboardClient({ user, data }: DashboardClientProps) {
           </section>
         )}
       </div>
+
+      {/* Quick Actions FAB */}
+      <QuickActions />
     </div>
   )
 }
