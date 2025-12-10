@@ -22,6 +22,13 @@ import {
   X,
 } from 'lucide-react'
 import { signOut, useSession } from 'next-auth/react'
+import type { LucideIcon } from 'lucide-react'
+
+interface NavItem {
+  name: string
+  href: string
+  icon: LucideIcon
+}
 
 interface SidebarProps {
   className?: string
@@ -67,7 +74,7 @@ export function LearnerSidebar({ className }: SidebarProps) {
     },
   ]
 
-  const NavLink = ({ item, showLabel = true }: { item: typeof navigation[0], showLabel?: boolean }) => {
+  const NavLink = ({ item, showLabel = true }: { item: NavItem, showLabel?: boolean }) => {
     const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
     return (
       <Link
