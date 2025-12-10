@@ -7,7 +7,7 @@ import { Input, InputProps } from './input'
 import { AlertCircle, CheckCircle, Eye, EyeOff } from 'lucide-react'
 import { Button } from './button'
 
-interface FormFieldProps extends Omit<InputProps, 'id'> {
+interface FormFieldProps extends Omit<InputProps, 'id' | 'error'> {
   id: string
   label: string
   description?: string

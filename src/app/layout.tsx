@@ -1,12 +1,12 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter } from 'next/font/google'
 import './globals.css'
 import { Providers } from '@/components/providers'
 import { Toaster } from '@/components/ui/toaster'
 import { SkipLink } from '@/components/ui/skip-link'
 import Script from 'next/script'
 
-const inter = Inter({ subsets: ['latin'] })
+// Use system font stack for offline builds and better performance
+const systemFontClass = 'font-sans'
 
 export const viewport: Viewport = {
   themeColor: [
@@ -114,11 +114,9 @@ export default function RootLayout({
   return (
     <html lang="fr" suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://tube.erythix.com" />
       </head>
-      <body className={inter.className}>
+      <body className={systemFontClass}>
         <Providers>
           <SkipLink />
           {children}

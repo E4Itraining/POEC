@@ -75,19 +75,19 @@ export async function getInstructorStats(instructorId: string) {
     (await prisma.enrollment.findMany({
       where: { course: { authorId: instructorId } },
       select: { userId: true }
-    })).map(e => e.userId)
+    })).map((e: { userId: string }) => e.userId)
   ).size
 
   return {
     totalCourses: courses.length,
-    publishedCourses: courses.filter(c => c.isPublished).length,
+    publishedCourses: courses.filter((c: { isPublished: boolean }) => c.isPublished).length,
     totalEnrollments: enrollments,
     completedEnrollments: completions,
     completionRate: enrollments > 0 ? (completions / enrollments) * 100 : 0,
     totalStudents,
     avgQuizScore: quizStats._avg.percentage || 0,
     totalQuizAttempts: quizStats._count,
-    courseStats: courses.map(c => ({
+    courseStats: courses.map((c: { id: string; title: string; isPublished: boolean; _count: { enrollments: number } }) => ({
       id: c.id,
       title: c.title,
       isPublished: c.isPublished,
@@ -169,19 +169,19 @@ export async function getCourseAnalytics(courseId: string) {
 
   return {
     course,
-    enrollmentsByStatus: enrollments.reduce((acc, e) => {
+    enrollmentsByStatus: enrollments.reduce((acc: Record<string, number>, e: { status: string; _count: number }) => {
       acc[e.status] = e._count
       return acc
     }, {} as Record<string, number>),
     avgProgress: progress._avg.progressPercent || 0,
     avgTimeSpent: progress._avg.timeSpent || 0,
     lessonCompletionRates: lessonStats,
-    quizPerformance: quizStats.map(q => ({
+    quizPerformance: quizStats.map((q: { quizId: string; _avg: { percentage: number | null }; _count: number }) => ({
       quizId: q.quizId,
       avgScore: q._avg.percentage || 0,
       attempts: q._count
     })),
-    recentActivity: recentActivity.map(a => ({
+    recentActivity: recentActivity.map((a: { user: { firstName: string | null; lastName: string | null }; lesson: { title: string }; completedAt: Date | null }) => ({
       user: `${a.user.firstName} ${a.user.lastName}`,
       lesson: a.lesson.title,
       completedAt: a.completedAt
@@ -209,7 +209,7 @@ export async function getStudentProgress(courseId: string, limit = 50, offset = 
     orderBy: { enrolledAt: 'desc' }
   })
 
-  const studentIds = students.map(s => s.userId)
+  const studentIds = students.map((s: { userId: string }) => s.userId)
 
   const [progressData, quizData] = await Promise.all([
     prisma.courseProgress.findMany({
@@ -231,19 +231,19 @@ export async function getStudentProgress(courseId: string, limit = 50, offset = 
     })
   ])
 
-  const progressMap = new Map(progressData.map(p => [p.userId, p]))
+  const progressMap = new Map(progressData.map((p: { userId: string; progressPercent: number; timeSpent: number; lastAccessedAt: Date | null }) => [p.userId, p]))
   const quizMap = new Map<string, typeof quizData>()
-  quizData.forEach(q => {
+  quizData.forEach((q: { userId: string; percentage: number }) => {
     const existing = quizMap.get(q.userId) || []
-    existing.push(q)
+    existing.push(q as (typeof quizData)[number])
     quizMap.set(q.userId, existing)
   })
 
-  return students.map(enrollment => {
-    const progress = progressMap.get(enrollment.userId)
+  return students.map((enrollment: { userId: string; user: { id: string; firstName: string | null; lastName: string | null; email: string; avatar: string | null }; enrolledAt: Date; status: string }) => {
+    const progress = progressMap.get(enrollment.userId) as { progressPercent: number; timeSpent: number; lastAccessedAt: Date | null } | undefined
     const quizzes = quizMap.get(enrollment.userId) || []
     const avgQuizScore = quizzes.length > 0
-      ? quizzes.reduce((sum, q) => sum + q.percentage, 0) / quizzes.length
+      ? quizzes.reduce((sum: number, q: { percentage: number }) => sum + q.percentage, 0) / quizzes.length
       : null
 
     return {

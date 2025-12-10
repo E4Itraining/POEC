@@ -36,15 +36,15 @@ async function getUserCourses(userId: string) {
     where: { userId },
   })
 
-  return enrollments.map((enrollment) => {
-    const progress = courseProgress.find((p) => p.courseId === enrollment.courseId)
+  return enrollments.map((enrollment: { id: string; enrolledAt: Date; status: string; courseId: string; course: { id: string; title: string; slug: string; thumbnail: string | null; level: string; category: string; duration: number; author: { firstName: string | null; lastName: string | null }; modules: { lessons: { lessonProgress: { isCompleted: boolean }[] }[] }[] } }) => {
+    const progress = courseProgress.find((p: { courseId: string }) => p.courseId === enrollment.courseId) as { progressPercent: number; timeSpent: number; lastAccessedAt: Date | null } | undefined
     const totalLessons = enrollment.course.modules.reduce(
-      (acc, m) => acc + m.lessons.length,
+      (acc: number, m: { lessons: unknown[] }) => acc + m.lessons.length,
       0
     )
     const completedLessons = enrollment.course.modules.reduce(
-      (acc, m) =>
-        acc + m.lessons.filter((l) => l.lessonProgress[0]?.isCompleted).length,
+      (acc: number, m: { lessons: { lessonProgress: { isCompleted: boolean }[] }[] }) =>
+        acc + m.lessons.filter((l: { lessonProgress: { isCompleted: boolean }[] }) => l.lessonProgress[0]?.isCompleted).length,
       0
     )
 
@@ -80,7 +80,7 @@ async function getCertificates(userId: string) {
     orderBy: { issuedAt: 'desc' },
   })
 
-  return certs.map((cert) => ({
+  return certs.map((cert: { id: string; certificateNumber: string; issuedAt: Date; course: { id: string; title: string; slug: string } }) => ({
     id: cert.id,
     certificateNumber: cert.certificateNumber,
     issuedAt: cert.issuedAt,

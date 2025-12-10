@@ -49,8 +49,8 @@ export async function POST(
     for (const question of quiz.questions) {
       maxScore += question.points
       const correctAnswerIds = question.answers
-        .filter((a) => a.isCorrect)
-        .map((a) => a.id)
+        .filter((a: { isCorrect: boolean }) => a.isCorrect)
+        .map((a: { id: string }) => a.id)
       correctAnswers[question.id] = correctAnswerIds
 
       const userAnswers = answers[question.id] || []
@@ -116,7 +116,7 @@ export async function POST(
       })
 
       const completedLessons = allLessons.filter(
-        (l) => l.lessonProgress[0]?.isCompleted
+        (l: { lessonProgress: { isCompleted: boolean }[] }) => l.lessonProgress[0]?.isCompleted
       ).length
       const totalLessons = allLessons.length
       const progressPercent =

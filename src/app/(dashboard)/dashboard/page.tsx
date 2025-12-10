@@ -74,17 +74,17 @@ async function getDashboardData(userId: string) {
   })
 
   const completedLessonsSet = new Set(
-    lessonProgressMap.filter(lp => lp.isCompleted).map(lp => lp.lessonId)
+    lessonProgressMap.filter((lp: { isCompleted: boolean }) => lp.isCompleted).map((lp: { lessonId: string }) => lp.lessonId)
   )
 
-  const coursesWithProgress = recentProgress.map(progress => {
-    const enrollment = enrollments.find(e => e.courseId === progress.courseId)
+  const coursesWithProgress = recentProgress.map((progress: { courseId: string; course: { id: string; slug: string; title: string; thumbnail: string | null; level: string; category: string; duration: number }; progressPercent: number; lastAccessedAt: Date }) => {
+    const enrollment = enrollments.find((e: { courseId: string }) => e.courseId === progress.courseId) as { course: { modules: { lessons: { id: string }[] }[] } } | undefined
     const totalLessons = enrollment?.course.modules.reduce(
-      (acc, m) => acc + m.lessons.length,
+      (acc: number, m: { lessons: { id: string }[] }) => acc + m.lessons.length,
       0
     ) || 0
     const completedLessons = enrollment?.course.modules.reduce(
-      (acc, m) => acc + m.lessons.filter(l => completedLessonsSet.has(l.id)).length,
+      (acc: number, m: { lessons: { id: string }[] }) => acc + m.lessons.filter((l: { id: string }) => completedLessonsSet.has(l.id)).length,
       0
     ) || 0
 
@@ -104,16 +104,16 @@ async function getDashboardData(userId: string) {
   })
 
   const totalCoursesEnrolled = enrollments.length
-  const completedCourses = enrollments.filter(e => e.status === 'COMPLETED').length
-  const totalTimeSpent = recentProgress.reduce((acc, p) => acc + p.timeSpent, 0)
+  const completedCourses = enrollments.filter((e: { status: string }) => e.status === 'COMPLETED').length
+  const totalTimeSpent = recentProgress.reduce((acc: number, p: { timeSpent: number }) => acc + p.timeSpent, 0)
   const averageProgress = recentProgress.length > 0
-    ? recentProgress.reduce((acc, p) => acc + p.progressPercent, 0) / recentProgress.length
+    ? recentProgress.reduce((acc: number, p: { progressPercent: number }) => acc + p.progressPercent, 0) / recentProgress.length
     : 0
-  const totalPoints = badges.reduce((acc, ub) => acc + ub.badge.points, 0)
+  const totalPoints = badges.reduce((acc: number, ub: { badge: { points: number } }) => acc + ub.badge.points, 0)
 
   return {
     coursesInProgress: coursesWithProgress,
-    badges: badges.map(ub => ({
+    badges: badges.map((ub: { badge: { id: string; name: string; description: string; icon: string; points: number; category: string }; earnedAt: Date }) => ({
       id: ub.badge.id,
       name: ub.badge.name,
       description: ub.badge.description,
@@ -122,14 +122,14 @@ async function getDashboardData(userId: string) {
       category: ub.badge.category,
       earnedAt: ub.earnedAt,
     })),
-    notifications: notifications.map(n => ({
+    notifications: notifications.map((n: { id: string; title: string; message: string; type: string; createdAt: Date }) => ({
       id: n.id,
       title: n.title,
       message: n.message,
       type: n.type,
       createdAt: n.createdAt,
     })),
-    recommendedCourses: recommendedCourses.map(course => ({
+    recommendedCourses: recommendedCourses.map((course: { id: string; slug: string; title: string; shortDescription: string | null; thumbnail: string | null; level: string; category: string; duration: number; isFree: boolean; isFeatured: boolean; author: { firstName: string | null; lastName: string | null }; _count: { enrollments: number }; modules: { lessons: unknown[] }[] }) => ({
       id: course.id,
       slug: course.slug,
       title: course.title,
@@ -142,7 +142,7 @@ async function getDashboardData(userId: string) {
       isFeatured: course.isFeatured,
       author: course.author,
       enrollmentCount: course._count.enrollments,
-      lessonCount: course.modules.reduce((acc, m) => acc + m.lessons.length, 0),
+      lessonCount: course.modules.reduce((acc: number, m: { lessons: unknown[] }) => acc + m.lessons.length, 0),
     })),
     stats: {
       totalCoursesEnrolled,

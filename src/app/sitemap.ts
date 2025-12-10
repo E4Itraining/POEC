@@ -50,7 +50,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       },
     })
 
-    coursePages = courses.map((course) => ({
+    coursePages = courses.map((course: { slug: string; updatedAt: Date }) => ({
       url: `${baseUrl}/courses/${course.slug}`,
       lastModified: course.updatedAt,
       changeFrequency: 'weekly' as const,

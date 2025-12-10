@@ -184,7 +184,7 @@ export async function DELETE(
     })
 
     await Promise.all(
-      remainingLessons.map((lesson, index) =>
+      remainingLessons.map((lesson: { id: string }, index: number) =>
         prisma.lesson.update({
           where: { id: lesson.id },
           data: { order: index },
@@ -213,8 +213,8 @@ async function updateCourseDuration(courseId: string) {
     },
   })
 
-  const totalDuration = modules.reduce((acc, mod) => {
-    return acc + mod.lessons.reduce((lessonAcc, lesson) => lessonAcc + lesson.duration, 0)
+  const totalDuration = modules.reduce((acc: number, mod: { lessons: { duration: number }[] }) => {
+    return acc + mod.lessons.reduce((lessonAcc: number, lesson: { duration: number }) => lessonAcc + lesson.duration, 0)
   }, 0)
 
   await prisma.course.update({

@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
     })
 
     const completedLessons = allLessons.filter(
-      (l) => l.lessonProgress[0]?.isCompleted
+      (l: { lessonProgress: { isCompleted: boolean }[] }) => l.lessonProgress[0]?.isCompleted
     ).length
     const totalLessons = allLessons.length
     const progressPercent =

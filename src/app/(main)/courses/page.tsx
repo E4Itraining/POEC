@@ -109,7 +109,7 @@ export default async function CoursesPage({ searchParams }: CoursesPageProps) {
               {courses.length} cours trouvé{courses.length > 1 ? 's' : ''}
             </p>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {courses.map((course) => (
+              {courses.map((course: CourseCardProps['course']) => (
                 <CourseCard key={course.id} course={course} />
               ))}
             </div>

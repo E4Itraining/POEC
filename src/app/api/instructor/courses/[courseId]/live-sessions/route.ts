@@ -64,7 +64,7 @@ export async function GET(
     })
 
     // Ajouter le nombre de participants
-    const sessionsWithParticipants = sessions.map((s) => ({
+    const sessionsWithParticipants = sessions.map((s: { _count: { registrations: number }; [key: string]: unknown }) => ({
       ...s,
       participantCount: s._count.registrations,
     }))
