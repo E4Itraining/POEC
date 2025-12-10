@@ -131,7 +131,7 @@ export default async function LearnPage({ params, searchParams }: LearnPageProps
   const progressPercent = totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0
 
   // Trouver les leçons précédente et suivante
-  const allLessons = course.modules.flatMap((m: { lessons: { id: string }[] }) => m.lessons)
+  const allLessons = course.modules.flatMap((m: { lessons: { id: string; title: string }[] }) => m.lessons)
   const currentIndex = currentLesson ? allLessons.findIndex((l: { id: string }) => l.id === currentLesson.id) : -1
   const prevLesson = currentIndex > 0 ? allLessons[currentIndex - 1] : null
   const nextLesson = currentIndex < allLessons.length - 1 ? allLessons[currentIndex + 1] : null
