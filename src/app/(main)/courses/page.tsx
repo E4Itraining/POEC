@@ -44,7 +44,7 @@ async function getCourses(filters: CoursesPageProps['searchParams']) {
     ]
   }
 
-  const orderBy: Record<string, string> = {}
+  const orderBy: Record<string, string | { _count: string }> = {}
   switch (filters.sort) {
     case 'newest':
       orderBy.createdAt = 'desc'
