@@ -60,7 +60,10 @@ async function getUserCourses(userId: string) {
         level: enrollment.course.level,
         category: enrollment.course.category,
         duration: enrollment.course.duration,
-        author: enrollment.course.author,
+        author: {
+          firstName: enrollment.course.author.firstName || '',
+          lastName: enrollment.course.author.lastName || '',
+        },
       },
       progress: progress?.progressPercent || 0,
       totalLessons,
