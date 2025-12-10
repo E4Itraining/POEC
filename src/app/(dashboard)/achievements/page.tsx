@@ -28,7 +28,7 @@ async function getUserAchievements(userId: string) {
 
   const [completedCourses, completedLessons, passedQuizzes, certificates] = stats
 
-  const totalPoints = userBadges.reduce((acc, ub) => acc + ub.badge.points, 0)
+  const totalPoints = userBadges.reduce((acc: number, ub: { badge: { points: number } }) => acc + ub.badge.points, 0)
 
   return {
     userBadges,

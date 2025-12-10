@@ -44,9 +44,9 @@ export async function generateRecommendations(userId: string, limit = 5): Promis
     }
   })
 
-  const enrolledCourseIds = enrollments.map(e => e.course.id)
-  const completedCategories = new Set(enrollments.map(e => e.course.category))
-  const userLevels = new Set(enrollments.map(e => e.course.level))
+  const enrolledCourseIds = enrollments.map((e: { course: { id: string } }) => e.course.id)
+  const completedCategories = new Set(enrollments.map((e: { course: { category: string } }) => e.course.category))
+  const userLevels = new Set<string>(enrollments.map((e: { course: { level: string } }) => e.course.level))
 
   // Get all published courses not already enrolled
   const availableCourses = await prisma.course.findMany({
@@ -63,7 +63,7 @@ export async function generateRecommendations(userId: string, limit = 5): Promis
 
   // Calculate scores for each course
   const scoredCourses: CourseScore[] = await Promise.all(
-    availableCourses.map(async (course) => {
+    availableCourses.map(async (course: { id: string; category: string; level: string; duration: number; publishedAt: Date | null; _count: { enrollments: number } }) => {
       const factors: RecommendationFactors = {
         categoryMatch: 0,
         levelMatch: 0,
@@ -91,7 +91,7 @@ export async function generateRecommendations(userId: string, limit = 5): Promis
       // Level match
       const levelOrder = ['BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'EXPERT']
       const userMaxLevel = Math.max(
-        ...Array.from(userLevels).map(l => levelOrder.indexOf(l))
+        ...Array.from(userLevels).map((l: string) => levelOrder.indexOf(l))
       )
       const courseLevel = levelOrder.indexOf(course.level)
       const profileLevel = levelOrder.indexOf(profile?.skillLevel || 'BEGINNER')
@@ -106,7 +106,7 @@ export async function generateRecommendations(userId: string, limit = 5): Promis
       }
 
       // Popularity bonus
-      const maxEnrollments = Math.max(...availableCourses.map(c => c._count.enrollments))
+      const maxEnrollments = Math.max(...availableCourses.map((c: { _count: { enrollments: number } }) => c._count.enrollments))
       if (maxEnrollments > 0) {
         factors.popularityBonus = course._count.enrollments / maxEnrollments
         if (factors.popularityBonus > 0.7) {
@@ -115,13 +115,13 @@ export async function generateRecommendations(userId: string, limit = 5): Promis
       }
 
       // Completion potential - based on user's average completion rate
-      const completedEnrollments = enrollments.filter(e => e.status === 'COMPLETED').length
+      const completedEnrollments = enrollments.filter((e: { status: string }) => e.status === 'COMPLETED').length
       const completionRate = enrollments.length > 0
         ? completedEnrollments / enrollments.length
         : 0.5
 
       // Shorter courses for users with lower completion rates
-      const avgDuration = availableCourses.reduce((sum, c) => sum + c.duration, 0) / availableCourses.length
+      const avgDuration = availableCourses.reduce((sum: number, c: { duration: number }) => sum + c.duration, 0) / availableCourses.length
       if (completionRate < 0.5 && course.duration < avgDuration) {
         factors.completionPotential = 0.9
         reasons.push('Durée adaptée à votre rythme')
@@ -220,7 +220,7 @@ export async function getRecommendations(userId: string) {
     return getRecommendations(userId)
   }
 
-  return recommendations.map(rec => ({
+  return recommendations.map((rec: { reason: string; [key: string]: unknown }) => ({
     ...rec,
     reasons: JSON.parse(rec.reason)
   }))

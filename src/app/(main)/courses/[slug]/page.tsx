@@ -104,17 +104,17 @@ export default async function CoursePage({ params }: CoursePageProps) {
     })
   }
 
-  const totalLessons = course.modules.reduce((acc, m) => acc + m.lessons.length, 0)
+  const totalLessons = course.modules.reduce((acc: number, m: { lessons: unknown[] }) => acc + m.lessons.length, 0)
   const totalQuizzes = course.modules.reduce(
-    (acc, m) => acc + m.lessons.filter((l) => l.quiz).length,
+    (acc: number, m: { lessons: { quiz: unknown }[] }) => acc + m.lessons.filter((l: { quiz: unknown }) => l.quiz).length,
     0
   )
   const totalLabs = course.modules.reduce(
-    (acc, m) => acc + m.lessons.reduce((lacc, l) => lacc + (l.labAssignments?.length || 0), 0),
+    (acc: number, m: { lessons: { labAssignments?: unknown[] }[] }) => acc + m.lessons.reduce((lacc: number, l: { labAssignments?: unknown[] }) => lacc + (l.labAssignments?.length || 0), 0),
     0
   )
   const totalVideos = course.modules.reduce(
-    (acc, m) => acc + m.lessons.filter((l) => l.type === 'VIDEO').length,
+    (acc: number, m: { lessons: { type: string }[] }) => acc + m.lessons.filter((l: { type: string }) => l.type === 'VIDEO').length,
     0
   )
 
@@ -233,7 +233,7 @@ export default async function CoursePage({ params }: CoursePageProps) {
                 </CardHeader>
                 <CardContent>
                   <Accordion type="multiple" className="w-full">
-                    {course.modules.map((module, index) => (
+                    {course.modules.map((module: { id: string; title: string; lessons: { id: string; title: string; type: string; duration: number; isPreview: boolean; quiz: unknown; labAssignments?: { id: string }[] }[] }, index: number) => (
                       <AccordionItem key={module.id} value={module.id}>
                         <AccordionTrigger className="hover:no-underline">
                           <div className="flex items-center gap-4 text-left">
@@ -250,7 +250,7 @@ export default async function CoursePage({ params }: CoursePageProps) {
                         </AccordionTrigger>
                         <AccordionContent>
                           <ul className="space-y-2 ml-12">
-                            {module.lessons.map((lesson) => (
+                            {module.lessons.map((lesson: { id: string; title: string; type: string; duration: number; isPreview: boolean; quiz: unknown; labAssignments?: { id: string }[] }) => (
                               <li
                                 key={lesson.id}
                                 className="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-accent/50"

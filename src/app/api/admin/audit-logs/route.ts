@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
     const { logs, total } = await queryAuditLogs(query)
 
     return NextResponse.json({
-      logs: logs.map(log => ({
+      logs: logs.map((log: { id: string; details: string | null; [key: string]: unknown }) => ({
         ...log,
         details: log.details ? JSON.parse(log.details) : null
       })),

@@ -164,7 +164,7 @@ export async function DELETE(
     })
 
     await Promise.all(
-      remainingModules.map((mod, index) =>
+      remainingModules.map((mod: { id: string }, index: number) =>
         prisma.module.update({
           where: { id: mod.id },
           data: { order: index },

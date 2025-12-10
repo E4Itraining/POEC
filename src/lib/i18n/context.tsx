@@ -1,12 +1,14 @@
 'use client'
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
-import { translations, Locale, TranslationKeys, localeNames, localeFlags } from './translations'
+import { translations, Locale, localeNames, localeFlags } from './translations'
+
+type TranslationType = (typeof translations)[Locale]
 
 interface I18nContextType {
   locale: Locale
   setLocale: (locale: Locale) => void
-  t: TranslationKeys
+  t: TranslationType
   localeNames: typeof localeNames
   localeFlags: typeof localeFlags
   availableLocales: Locale[]

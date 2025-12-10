@@ -123,16 +123,16 @@ export default async function LearnPage({ params, searchParams }: LearnPageProps
   }
 
   // Calculer la progression
-  const totalLessons = course.modules.reduce((acc, m) => acc + m.lessons.length, 0)
+  const totalLessons = course.modules.reduce((acc: number, m: { lessons: unknown[] }) => acc + m.lessons.length, 0)
   const completedLessons = course.modules.reduce(
-    (acc, m) => acc + m.lessons.filter((l) => l.lessonProgress[0]?.isCompleted).length,
+    (acc: number, m: { lessons: { lessonProgress: { isCompleted: boolean }[] }[] }) => acc + m.lessons.filter((l: { lessonProgress: { isCompleted: boolean }[] }) => l.lessonProgress[0]?.isCompleted).length,
     0
   )
   const progressPercent = totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0
 
   // Trouver les leçons précédente et suivante
-  const allLessons = course.modules.flatMap((m) => m.lessons)
-  const currentIndex = currentLesson ? allLessons.findIndex((l) => l.id === currentLesson.id) : -1
+  const allLessons = course.modules.flatMap((m: { lessons: { id: string }[] }) => m.lessons)
+  const currentIndex = currentLesson ? allLessons.findIndex((l: { id: string }) => l.id === currentLesson.id) : -1
   const prevLesson = currentIndex > 0 ? allLessons[currentIndex - 1] : null
   const nextLesson = currentIndex < allLessons.length - 1 ? allLessons[currentIndex + 1] : null
 
@@ -184,10 +184,10 @@ export default async function LearnPage({ params, searchParams }: LearnPageProps
             <div className="p-2">
               <Accordion
                 type="multiple"
-                defaultValue={course.modules.map((m) => m.id)}
+                defaultValue={course.modules.map((m: { id: string }) => m.id)}
                 className="w-full"
               >
-                {course.modules.map((module, moduleIndex) => (
+                {course.modules.map((module: { id: string; title: string; lessons: { id: string; title: string; type: string; lessonProgress: { isCompleted: boolean }[] }[] }, moduleIndex: number) => (
                   <AccordionItem key={module.id} value={module.id} className="border-b-0">
                     <AccordionTrigger className="py-2 px-2 hover:no-underline hover:bg-accent rounded-lg">
                       <div className="flex items-center gap-2 text-left">
@@ -199,7 +199,7 @@ export default async function LearnPage({ params, searchParams }: LearnPageProps
                     </AccordionTrigger>
                     <AccordionContent className="pb-0">
                       <ul className="space-y-1 ml-8">
-                        {module.lessons.map((lesson) => {
+                        {module.lessons.map((lesson: { id: string; title: string; type: string; lessonProgress: { isCompleted: boolean }[] }) => {
                           const isCompleted = lesson.lessonProgress[0]?.isCompleted
                           const isActive = currentLesson?.id === lesson.id
 
