@@ -205,6 +205,14 @@ async function main() {
     },
   })
 
+  // Supprimer les modules existants pour éviter les doublons lors de re-seed
+  // (les leçons, quiz, questions, réponses et labs sont supprimés en cascade)
+  await prisma.module.deleteMany({
+    where: {
+      courseId: { in: [course1.id, course2.id] },
+    },
+  })
+
   // Créer le contenu pour le cours 1 (Gouvernance SI)
   const govStructure = courseStructures['gouvernance-si']
   let firstLesson1: { id: string } | null = null
@@ -404,11 +412,16 @@ async function main() {
       { userId: learner.id, courseId: course1.id },
       { userId: learner.id, courseId: course2.id },
     ],
+    skipDuplicates: true,
   })
 
   // Créer de la progression pour l'apprenant
-  await prisma.courseProgress.create({
-    data: {
+  await prisma.courseProgress.upsert({
+    where: {
+      userId_courseId: { userId: learner.id, courseId: course1.id },
+    },
+    update: {},
+    create: {
       userId: learner.id,
       courseId: course1.id,
       progressPercent: 25,
@@ -416,8 +429,12 @@ async function main() {
     },
   })
 
-  await prisma.lessonProgress.create({
-    data: {
+  await prisma.lessonProgress.upsert({
+    where: {
+      userId_lessonId: { userId: learner.id, lessonId: lesson1_1.id },
+    },
+    update: {},
+    create: {
       userId: learner.id,
       lessonId: lesson1_1.id,
       isCompleted: true,
@@ -427,8 +444,12 @@ async function main() {
   })
 
   // Attribuer un badge à l'apprenant
-  await prisma.userBadge.create({
-    data: {
+  await prisma.userBadge.upsert({
+    where: {
+      userId_badgeId: { userId: learner.id, badgeId: badges[0].id },
+    },
+    update: {},
+    create: {
       userId: learner.id,
       badgeId: badges[0].id, // Premier pas
     },
