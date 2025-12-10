@@ -65,7 +65,7 @@ export async function GET(
     }
 
     // Mélanger les réponses
-    questions = questions.map((q: { id: string; text: string; type: string; points: number; explanation: string | null; answers: { id: string; order: number; text: string }[] }) => ({
+    questions = questions.map((q: { id: string; order: number; quizId: string; text: string; type: string; points: number; explanation: string | null; answers: { id: string; order: number; text: string }[] }) => ({
       ...q,
       answers: [...q.answers].sort(() => Math.random() - 0.5),
     }))
@@ -76,7 +76,7 @@ export async function GET(
       description: quiz.description,
       passingScore: quiz.passingScore,
       timeLimit: quiz.timeLimit,
-      questions: questions.map((q: { id: string; text: string; type: string; points: number; explanation: string | null; answers: { id: string; order: number; text: string }[] }) => ({
+      questions: questions.map((q: { id: string; order: number; quizId: string; text: string; type: string; points: number; explanation: string | null; answers: { id: string; order: number; text: string }[] }) => ({
         id: q.id,
         text: q.text,
         type: q.type,
