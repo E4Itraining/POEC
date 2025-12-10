@@ -140,7 +140,10 @@ async function getDashboardData(userId: string) {
       duration: course.duration,
       isFree: course.isFree,
       isFeatured: course.isFeatured,
-      author: course.author,
+      author: {
+        firstName: course.author.firstName || '',
+        lastName: course.author.lastName || '',
+      },
       enrollmentCount: course._count.enrollments,
       lessonCount: course.modules.reduce((acc: number, m: { lessons: unknown[] }) => acc + m.lessons.length, 0),
     })),
