@@ -406,13 +406,16 @@ async function main() {
   // Garder les références aux premières leçons pour la progression
   const lesson1_1 = firstLesson1!
 
-  // Inscrire l'apprenant aux cours
-  await prisma.enrollment.createMany({
-    data: [
-      { userId: learner.id, courseId: course1.id },
-      { userId: learner.id, courseId: course2.id },
-    ],
-    skipDuplicates: true,
+  // Inscrire l'apprenant aux cours (using upsert since SQLite doesn't support skipDuplicates)
+  await prisma.enrollment.upsert({
+    where: { userId_courseId: { userId: learner.id, courseId: course1.id } },
+    update: {},
+    create: { userId: learner.id, courseId: course1.id },
+  })
+  await prisma.enrollment.upsert({
+    where: { userId_courseId: { userId: learner.id, courseId: course2.id } },
+    update: {},
+    create: { userId: learner.id, courseId: course2.id },
   })
 
   // Créer de la progression pour l'apprenant
