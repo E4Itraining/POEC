@@ -103,22 +103,22 @@ export default function RepositoriesPage() {
 
   const statusConfig: Record<string, { label: string; color: string; icon: typeof Clock }> = {
     NOT_STARTED: {
-      label: t.repositories.status.notStarted,
+      label: t.repositories.status.NOT_STARTED,
       color: 'bg-slate-500/10 text-slate-400 border-slate-500/20',
       icon: AlertCircle,
     },
     IN_PROGRESS: {
-      label: t.repositories.status.inProgress,
+      label: t.repositories.status.IN_PROGRESS,
       color: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
       icon: Clock,
     },
     SUBMITTED: {
-      label: t.repositories.status.submitted,
+      label: t.repositories.status.SUBMITTED,
       color: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
       icon: GitPullRequest,
     },
     GRADED: {
-      label: t.repositories.status.graded,
+      label: t.repositories.status.GRADED,
       color: 'bg-green-500/10 text-green-400 border-green-500/20',
       icon: CheckCircle,
     },
