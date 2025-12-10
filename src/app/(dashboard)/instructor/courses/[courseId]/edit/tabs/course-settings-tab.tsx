@@ -119,7 +119,7 @@ export function CourseSettingsTab({ course, onUpdate, setHasChanges }: CourseSet
     try {
       const tags = formData.tags
         .split(',')
-        .map((tag) => tag.trim())
+        .map((tag: string) => tag.trim())
         .filter(Boolean)
 
       await onUpdate({
